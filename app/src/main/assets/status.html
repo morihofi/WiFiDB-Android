@@ -1,0 +1,90 @@
+<html>
+<head>
+    <title>Status</title>
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+
+
+        }
+
+        .center {
+          margin: auto;
+          width: 50%;
+          padding: 10px;
+        }
+
+        .widget {
+            background-color: lightgrey;
+            text-align: center;
+            border-radius: 25px;
+            width: 300px;
+            margin-top: 10px;
+
+        }
+        .widget_title {
+            color: #000000;
+        }
+        .widget_value {
+            color: #000000;
+            font-size: 1.5em;
+
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="widget center">
+        <span class="widget_title">GPS Coordinates</span><br>
+        <span class="widget_value" id="val_gps">...</span>
+    </div>
+    <div class="widget center">
+        <span class="widget_title">Wifi Networks <span id="val_title_scaninterval">()</span></span><br>
+        <span class="widget_value" id="val_wifi">...</span>
+    </div>
+    <div class="widget center">
+        <span class="widget_title">Status</span><br>
+        <span class="widget_value" id="val_status">...</span>
+    </div>
+
+
+
+<script>
+
+    function updateValue(id, value){
+        document.getElementById(id).innerHTML = value;
+    }
+
+    function isrunning(status){
+        var divsToHide = document.getElementsByClassName("widget"); //divsToHide is an array
+
+        if(status){
+            //Service is running
+
+            for(var i = 0; i < divsToHide.length; i++){
+                divsToHide[i].style.display = "block"; // depending on what you're doing
+            }
+        }else{
+            //Service is not running
+
+            for(var i = 0; i < divsToHide.length; i++){
+                divsToHide[i].style.display = "none"; // depending on what you're doing
+            }
+        }
+
+    }
+
+
+</script>
+
+</body>
+</html>

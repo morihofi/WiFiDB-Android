@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">WifiDB</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="offline_header">Offline</string>
+    <string name="general_header">General</string>
+
+    <!-- Offline Preferences -->
+    <string name="offline_deleteafterupload">Delete recordings after upload</string>
+
+    <!-- General Preferences -->
+    <string name="general_rescaninterval">Default rescan interval</string>
+
+
+    <!-- General Preferences -->
+    <string name="action_settings">Settings</string>
+
+</resources>
