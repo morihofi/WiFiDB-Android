@@ -62,6 +62,7 @@ public class WiFiCollectorService extends Service implements LocationListener {
     public static URI masterserver_ws_URI = null;
     public static Thread t1 = null;
     public static Boolean t1firstrun = true;
+    public static String contributor = "";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -106,6 +107,7 @@ public class WiFiCollectorService extends Service implements LocationListener {
             t1firstrun = true;
             rescan_interval = Integer.valueOf(intent.getStringExtra("rescan_interval").toString());
             offlinemode = intent.getBooleanExtra("offlinemode", false);
+            contributor = intent.getStringExtra("contributor");
 
             startForeground(1, getNotification("Enabling Wifi...",this));
             wmgr.setWifiEnabled(true);
@@ -364,6 +366,9 @@ public class WiFiCollectorService extends Service implements LocationListener {
                     jobj.put("loc_lon", loc_lon);
                     jobj.put("loc_lat", loc_lat);
                     jobj.put("loc_radius", loc_radius);
+
+                    jobj.put("contributor", contributor);
+
                     JSONArray arrnetworks = new JSONArray();
 
 

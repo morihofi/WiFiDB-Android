@@ -24,6 +24,8 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.os.Process;
 import android.os.StrictMode;
 import android.provider.Settings;
 import android.view.Menu;
@@ -70,14 +72,13 @@ public class MainActivity extends AppCompatActivity{
     private TextView lblofflinerecords;
     Button btnstart = null;
     Button btnstop = null;
-    EditText txtrescan = null;
     Button btnkill = null;
     WebView webview = null;
-    Switch swoffline = null;
     Button btnuploadofflinerecs = null;
     ProgressDialog progdlg_upload;
     BroadcastReceiver updateUIReciver;
     OkHttpClient client = new OkHttpClient();
+    SharedPreferences preferences;
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -100,9 +101,9 @@ public class MainActivity extends AppCompatActivity{
 
                     AlertDialog alertDialog = new AlertDialog.Builder(this)
                             .setIcon(android.R.drawable.ic_dialog_alert) //set icon
-                            .setTitle("Insufficient permission") //set title
-                            .setMessage("This application requires the permission to work properly") //set message
-                            .setPositiveButton("Close", new DialogInterface.OnClickListener() { //set positive button
+                            .setTitle(R.string.msg_energysafing_title) //set title
+                            .setMessage(R.string.msg_energysafing_text) //set message
+                            .setPositiveButton(R.string.btn_close, new DialogInterface.OnClickListener() { //set positive button
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     //set what would happen when positive button is clicked
@@ -127,7 +128,7 @@ public class MainActivity extends AppCompatActivity{
         // use the new evaluateJavascript method.
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             webview.loadUrl("javascript:" + js);
-        } else {/*from  w  w  w .ja va 2 s  .c o  m*/
+        } else {/* from wwwjava2s.com */
             webview.evaluateJavascript(js, null);
         }
     }
@@ -306,17 +307,58 @@ public class MainActivity extends AppCompatActivity{
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 
-       // checkForUpdate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent();
+            String packageName = getApplicationContext().getPackageName();
+            PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
+
+
+            if (pm.isIgnoringBatteryOptimizations(packageName)){
+                System.out.println("App ignores Battery optimations");
+             //   intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+
+
+
+
+        } else {
+                System.out.println("App does not ignore Battery optimations");
+             //   intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+             //   intent.setData(Uri.parse("package:" + packageName));
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder
+                        .setMessage(R.string.msg_energysafing_text)
+                        .setTitle(R.string.msg_energysafing_title)
+                        .setPositiveButton(R.string.btn_opensettings, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent myIntent = new Intent();
+                                myIntent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+                                startActivity(myIntent);
+                            }
+                        })
+                        .setNegativeButton(R.string.btn_maybelater, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                // Create the AlertDialog object and return it
+                builder.create().show();
+
+
+            }
+
+        }
+
+        // checkForUpdate();
 
         lblofflinerecords = (TextView) findViewById(R.id.lblofflinerecords);
         btnstart = (Button) findViewById(R.id.btnstart);
         btnstop = (Button) findViewById(R.id.btnstop);
-        txtrescan = (EditText) findViewById(R.id.txtrescan);
         btnkill = (Button) findViewById(R.id.btnkill);
         webview = (WebView)  findViewById(R.id.webView);
-        swoffline = (Switch) findViewById(R.id.swoffline);
         btnuploadofflinerecs = (Button) findViewById(R.id.btnuploadofflinerecs);
 
 
@@ -325,8 +367,8 @@ public class MainActivity extends AppCompatActivity{
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 1);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        txtrescan.setText(preferences.getString("general_rescan_interval","5"));
+
+
 
         webview.getSettings().setJavaScriptEnabled(true);
         webview.loadUrl("file:///android_asset/status.html");
@@ -423,19 +465,15 @@ public class MainActivity extends AppCompatActivity{
 
                 Intent serviceIntent = new Intent(v.getContext(), WiFiCollectorService.class);
                 serviceIntent.putExtra("action","start");
-                serviceIntent.putExtra("offlinemode", swoffline.isChecked());
-                serviceIntent.putExtra("rescan_interval",txtrescan.getText().toString());
+                serviceIntent.putExtra("offlinemode", preferences.getBoolean("offline_mode",false));
+                serviceIntent.putExtra("rescan_interval", preferences.getString("general_rescan_interval","1"));
+                serviceIntent.putExtra("contributor", preferences.getString("general_contributorname",""));
+
+
                 startService(serviceIntent);
 
-
-
-
-                    // \n is for new line
-                  //  Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-
-
-
-
+                // \n is for new line
+                //  Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
 
             }
         });
@@ -465,8 +503,8 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-                int id= android.os.Process.myPid();
-                android.os.Process.killProcess(id);
+                int id= Process.myPid();
+                Process.killProcess(id);
 
             }
         });

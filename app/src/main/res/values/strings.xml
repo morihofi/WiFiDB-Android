@@ -7,13 +7,36 @@
     <string name="general_header">General</string>
 
     <!-- Offline Preferences -->
-    <string name="offline_deleteafterupload">Delete recordings after upload</string>
+    <string name="offline_mode">Offline Mode</string>
+    <string name="offline_mode_desc">Enable this option to prevent this app from automatically uploading your collected WiFi networks. You must upload your collected data manually</string>
 
     <!-- General Preferences -->
-    <string name="general_rescaninterval">Default rescan interval</string>
+    <string name="general_rescaninterval">Rescan interval</string>
+    <string name="general_rescaninterval_desc">Specifies the time interval in seconds after which WiFi networks are automatically searched for</string>
+    <string name="general_contibutorname">Set contributor name</string>
+    <string name="general_contibutorname_name">Set the name that will appear as a contributor in your collected networks. Leave it blank if you don\'t want to appear</string>
 
-
-    <!-- General Preferences -->
+    <!-- Main Menu -->
     <string name="action_settings">Settings</string>
+    <string name="force_rescan">Rescan WiFi now</string>
+
+    <!-- Main actions -->
+    <string name="btn_start">Start</string>
+    <string name="btn_stop">Stop</string>
+    <string name="btn_kill">Kill</string>
+    <string name="btn_upload">Upload offline records</string>
+
+    <string name="btn_maybelater">Maybe later</string>
+    <string name="btn_opensettings">Open Settings</string>
+    <string name="btn_close">Close</string>
+
+    <string name="msg_energysafing_title">Energy saving</string>
+    <string name="msg_energysafing_text">Please turn off optimization for this app to avoid the app being put to sleep by the system</string>
+
+
+    <string name="msg_insufficientpermissions_title">Insufficient Permissions</string>
+    <string name="msg_insufficientpermissions_text">This application requires the permissions to work properly</string>
+    <string name="notif_connectedtoserver">Connected to Server</string>
+
 
 </resources>

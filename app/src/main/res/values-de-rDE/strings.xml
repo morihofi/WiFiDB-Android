@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WlanDB</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    <string name="offline_header">Offline</string>
+    <string name="general_header">Allgemein</string>
+    <string name="offline_mode">Offline Modus</string>
+    <string name="offline_mode_desc">Aktivieren Sie diese Option, um zu verhindern, dass diese App Ihre gesammelten WLAN-Netzwerke automatisch hochlädt. Sie müssen Ihre gesammelten Daten manuell hochladen</string>
+    <string name="general_rescaninterval">Neuscannen Intervall</string>
+    <string name="general_rescaninterval_desc">Legt das Zeitintervall in Sekunden fest, nach dem automatisch nach WLAN-Netzwerken gescannt wird</string>
+    <string name="general_contibutorname">Beitragenden Name setzen/ändern</string>
+    <string name="general_contibutorname_name">Legen Sie den Namen fest, der in Ihren gesammelten Netzwerken als Mitwirkender angezeigt wird. Lassen Sie es leer, wenn Sie nicht erscheinen möchten</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="force_rescan">Jetzt WLAN-Netzwerke neu scannen</string>
+    <string name="btn_start">Start</string>
+    <string name="btn_stop">Stop</string>
+    <string name="btn_kill">Killen</string>
+    <string name="btn_upload">Offline-Datensätze hochladen</string>
+    <string name="btn_maybelater">Vielleicht später</string>
+    <string name="btn_opensettings">Einstellungen öffnen</string>
+    <string name="btn_close">Schließen</string>
+    <string name="msg_energysafing_title">Energiesparen</string>
+    <string name="msg_energysafing_text">Bitte deaktivieren Sie die Optimierung für diese App, um zu vermeiden, dass die App vom System in den Ruhezustand versetzt wird.</string>
+    <string name="msg_insufficientpermissions_title">Unzureichende Berechtigungen</string>
+    <string name="msg_insufficientpermissions_text">Diese Anwendung benötigt die Berechtigungen, um ordnungsgemäß zu funktionieren</string>
+    <string name="notif_connectedtoserver">Mit Server verbunden</string>
+</resources>
