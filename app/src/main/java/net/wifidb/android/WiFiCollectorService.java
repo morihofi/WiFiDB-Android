@@ -76,7 +76,21 @@ public class WiFiCollectorService extends Service implements LocationListener {
 
     public static Notification getNotification(String content, Context context){
         Intent notifIntent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notifIntent, 0);
+        PendingIntent pendingIntent = null;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            //Android 12 or higher
+            pendingIntent = PendingIntent.getActivity(context, 0, notifIntent, PendingIntent.FLAG_MUTABLE);
+                       }
+        else
+        {
+            //Android 11 and lower
+            pendingIntent = PendingIntent.getActivity(context, 0, notifIntent, PendingIntent.FLAG_ONE_SHOT);
+
+
+
+        }
+
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle("WiFiDB Collection Service")
