@@ -37,6 +37,20 @@
     <string name="msg_insufficientpermissions_title">Insufficient Permissions</string>
     <string name="msg_insufficientpermissions_text">This application requires the permissions to work properly</string>
     <string name="notif_connectedtoserver">Connected to Server</string>
+    <string name="msg_uploadrecords_text">Please wait until all records are uploaded</string>
+    <string name="msg_uploadrecords_title">Uploading records</string>
+    <string name="msg_uploadsuccess_title">Upload successful</string>
+    <string name="msg_uploadsuccess_text">Thank you for submitting your WiFi records!</string>
+    <string name="msg_uploadfailed_title">Upload failed</string>
+    <string name="msg_uploadfailed_text">There was an error during uploading. Please check your internet connectivity and try again later.</string>
+    <string name="msg_nothingtoupload_title">Nothing to upload</string>
+    <string name="msg_nothingtoupload_text">Before you can upload records, please collect some WiFi Networks in Offline Mode first</string>
+    <string name="num_offline_records">%o offline records</string>
+    <string name="status_offlinewifirecording">Offline WiFi-Recording</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="status_scanningwifinetworks">Scanning WiFi-networks</string>
+    <string name="status_connected">Connected to Server</string>
+    <string name="status_scanevery_x_seconds">Rescan every %o sec.</string>
 
 
 </resources>

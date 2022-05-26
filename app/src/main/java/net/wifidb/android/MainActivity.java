@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity{
 
                     AlertDialog alertDialog = new AlertDialog.Builder(this)
                             .setIcon(android.R.drawable.ic_dialog_alert) //set icon
-                            .setTitle(R.string.msg_energysafing_title) //set title
-                            .setMessage(R.string.msg_energysafing_text) //set message
+                            .setTitle(R.string.msg_insufficientpermissions_title) //set title
+                            .setMessage(R.string.msg_insufficientpermissions_text) //set message
                             .setPositiveButton(R.string.btn_close, new DialogInterface.OnClickListener() { //set positive button
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -408,7 +408,7 @@ public class MainActivity extends AppCompatActivity{
                         btnstop.setEnabled(true);
                         btnstart.setEnabled(false);
 
-                        runJavascriptOnWebView(webview, "updateValue(\"val_title_scaninterval\", \"" + "(Rescan every " + rescan_interval + " sec.)" + "\")");
+                        runJavascriptOnWebView(webview, "updateValue(\"val_title_scaninterval\", \"" + "(" + String.format(getApplicationContext().getResources().getString(R.string.status_scanevery_x_seconds),rescan_interval) +  ")" + "\")");
 
                         runJavascriptOnWebView(webview, "updateValue(\"val_wifi\", \"" + wifi_networks + "\")");
 
@@ -421,18 +421,18 @@ public class MainActivity extends AppCompatActivity{
                         if(wsstate.equals("disconnected")){
 
                             if(offlinemode){
-                                runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + "Offline WiFi-Recording" + "\")");
+                                runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_offlinewifirecording) + "\")");
                             }else{
-                                runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + "Disconnected" + "\")");
+                                runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_disconnected) + "\")");
                             }
 
 
                         }else{
 
                             if(is_scan_running){
-                                runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + "Scanning Wifi networks" + "\")");
+                                runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_scanningwifinetworks) + "\")");
                             }else{
-                                runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + "Connected to WebSocket" + "\")");
+                                runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_connected) + "\")");
                             }
 
                         }
@@ -520,8 +520,8 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v) {
 
                 progdlg_upload = new ProgressDialog(MainActivity.this);
-                progdlg_upload.setMessage("Please wait until all records are uploaded"); // Setting Message
-                progdlg_upload.setTitle("Uploading records"); // Setting Title
+                progdlg_upload.setMessage(getApplicationContext().getResources().getString(R.string.msg_uploadrecords_text)); // Setting Message
+                progdlg_upload.setTitle(R.string.msg_uploadrecords_title); // Setting Title
                 progdlg_upload.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style
                 progdlg_upload.show(); // Display Progress Dialog
                 progdlg_upload.setCancelable(false);
@@ -593,14 +593,14 @@ public class MainActivity extends AppCompatActivity{
 
                                        file.delete();
                                        runOnUiThread(() -> {
-                                            showAlert("Thank you for submitting your WiFi records!", "Upload success");
+                                            showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_text), getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_title));
                                        });
 
                                    } catch (Exception e) {
                                        e.printStackTrace();
                                        runOnUiThread(() -> {
                                            //Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                                           showAlert("There was an error during uploading: " + e.getMessage() + "\n\nPlease check your internet connectivity and try again later.", "Upload failed");
+                                           showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadfailed_text) + "\n\nDetails:\n" + e.getMessage(), getApplicationContext().getResources().getString(R.string.msg_uploadfailed_title));
                                        });
 
                                    }
@@ -610,7 +610,7 @@ public class MainActivity extends AppCompatActivity{
 
                                    }else{
                                        runOnUiThread(() -> {
-                                           showAlert("Before you can upload records, please collect some WiFi Networks in Offline Mode first", "Upload failed");
+                                           showAlert(getApplicationContext().getResources().getString(R.string.msg_nothingtoupload_text), getApplicationContext().getResources().getString(R.string.msg_nothingtoupload_title));
                                        });
                                    }
 
@@ -646,7 +646,9 @@ public class MainActivity extends AppCompatActivity{
 
     private void updateofflinerecordsnumber() {
 
-        lblofflinerecords.setText(libfile.getWifiRecords(getApplicationContext()).length() + " offline records");
+        lblofflinerecords.setText(String.format(getApplicationContext().getResources().getString(R.string.num_offline_records), libfile.getWifiRecords(getApplicationContext()).length()));
+
+
     }
 
     private void showAlert( String message , String title) {
