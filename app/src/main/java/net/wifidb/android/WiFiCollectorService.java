@@ -50,15 +50,14 @@ public class WiFiCollectorService extends Service implements LocationListener {
     private int rescan_interval = 0;
     public static Boolean scanRunning = false;
     private int nearnetworks = 0;
-    private int satellitesInRange = 0;
     public Boolean offlinemode;
 
     protected LocationManager locationManager;
     protected LocationListener locationListener;
     public static WebSocketClient wsclient;
 
-    public static String masterserver_ws =  "ws://tomcat.rs1.morihofi.de/wifidb-server/api/ws"; //"ws://192.168.178.43:8888/";
-    public static String masterserver_rest =  "http://tomcat.rs1.morihofi.de/wifidb-server/api/recordsubmit"; //"ws://192.168.178.43:8888/";
+    public static String masterserver_ws = "ws" + Config.getSecureCharIfNeeded() + "://" + Config.masterserver + "/api/ws"; // "ws://192.168.178.43:8080/wifidb-server/api/ws"; //
+    public static String masterserver_rest =  "http" + Config.getSecureCharIfNeeded() + "://"  + Config.masterserver + "/api/recordsubmit"; // "http://192.168.178.43:8080/wifidb-server/api/recordsubmit"; //
     public static URI masterserver_ws_URI = null;
     public static Thread t1 = null;
     public static Boolean t1firstrun = true;

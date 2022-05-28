@@ -13,13 +13,13 @@
             android:singleLine="true"
             android:summary="@string/general_rescaninterval_desc"
             android:title="@string/general_rescaninterval" />
-        <EditTextPreference
+        <!--EditTextPreference
             android:icon="@drawable/ic_baseline_contributor"
             android:key="general_contributorname"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/general_contibutorname"
-            app:summary="@string/general_contibutorname_name" />
+            app:summary="@string/general_contibutorname_name" /-->
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/offline_header">
