@@ -581,10 +581,17 @@ public class MainActivity extends AppCompatActivity{
 
                                        Response response = client.newCall(request).execute();
 
-                                       file.delete();
-                                       runOnUiThread(() -> {
-                                            showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_text), getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_title));
-                                       });
+                                        if(response.code() != 200){
+                                            throw new Exception("The response of the server was not successful. Response code " + response.code());
+                                        }else{
+                                            file.delete();
+                                            runOnUiThread(() -> {
+                                                showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_text), getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_title));
+                                            });
+                                        }
+
+
+
 
                                    } catch (Exception e) {
                                        e.printStackTrace();
