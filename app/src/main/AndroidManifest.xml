@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.wifidb.android">
+    package="de.morihofi.wifidb">
     <!-- Always include this permission -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Include only if your app benefits from precise location access. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
-        android:name=".App"
+        android:name="de.morihofi.wifidb.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,11 +20,11 @@
         android:theme="@style/Theme.WifiDB"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".SettingsActivity"
+            android:name="de.morihofi.wifidb.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".MainActivity"
+            android:name="de.morihofi.wifidb.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".WiFiCollectorService" />
+        <service android:name="de.morihofi.wifidb.WiFiCollectorService" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

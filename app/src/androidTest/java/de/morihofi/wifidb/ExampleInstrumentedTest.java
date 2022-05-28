@@ -1,4 +1,4 @@
-package net.wifidb.android;
+package de.morihofi.wifidb;
 
 import android.content.Context;
 

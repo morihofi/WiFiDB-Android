@@ -1,4 +1,4 @@
-package net.wifidb.android;
+package de.morihofi.wifidb;
 
 public class Config {
     //192.168.178.43:8080/wifidb-server

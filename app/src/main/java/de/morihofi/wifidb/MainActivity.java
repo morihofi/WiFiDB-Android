@@ -1,16 +1,14 @@
-package net.wifidb.android;
+package de.morihofi.wifidb;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -20,7 +18,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,8 +31,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,20 +39,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
@@ -419,6 +408,7 @@ public class MainActivity extends AppCompatActivity{
                         }
 
                         if(wsstate.equals("disconnected")){
+
 
                             if(offlinemode){
                                 runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_offlinewifirecording) + "\")");

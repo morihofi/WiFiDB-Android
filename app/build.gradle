@@ -6,7 +6,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "net.wifidb.android"
+        applicationId "de.morihofi.wifidb"
         minSdk 21
         targetSdk 32
         versionCode 3
