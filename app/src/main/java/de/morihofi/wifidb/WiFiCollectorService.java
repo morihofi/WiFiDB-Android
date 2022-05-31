@@ -51,6 +51,8 @@ public class WiFiCollectorService extends Service implements LocationListener {
 
     public static String masterserver_ws = "ws" + Config.getSecureCharIfNeeded() + "://" + Config.masterserver + "/api/ws"; // "ws://192.168.178.43:8080/wifidb-server/api/ws"; //
     public static String masterserver_rest =  "http" + Config.getSecureCharIfNeeded() + "://"  + Config.masterserver + "/api/recordsubmit"; // "http://192.168.178.43:8080/wifidb-server/api/recordsubmit"; //
+    public static String masterserver_restJSONL =  "http" + Config.getSecureCharIfNeeded() + "://"  + Config.masterserver + "/api/recordsubmitJSONL"; // "http://192.168.178.43:8080/wifidb-server/api/recordsubmit"; //
+
     public static URI masterserver_ws_URI = null;
     public static Thread t1 = null;
     public static Boolean t1firstrun = true;
@@ -73,14 +75,9 @@ public class WiFiCollectorService extends Service implements LocationListener {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             //Android 12 or higher
             pendingIntent = PendingIntent.getActivity(context, 0, notifIntent, PendingIntent.FLAG_MUTABLE);
-                       }
-        else
-        {
+        }else{
             //Android 11 and lower
             pendingIntent = PendingIntent.getActivity(context, 0, notifIntent, PendingIntent.FLAG_ONE_SHOT);
-
-
-
         }
 
 

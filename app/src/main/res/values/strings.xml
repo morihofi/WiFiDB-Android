@@ -51,6 +51,9 @@
     <string name="status_scanningwifinetworks">Scanning WiFi-networks</string>
     <string name="status_connected">Connected to Server</string>
     <string name="status_scanevery_x_seconds">Rescan every %o sec.</string>
+    <string name="msg_recordsmigration_title">Migrating records</string>
+    <string name="msg_recordsmigration_text">Migrating your existing records. Please wait...</string>
+    <string name="toast_x_records_migrated">%o records has been migrated</string>
 
 
 </resources>

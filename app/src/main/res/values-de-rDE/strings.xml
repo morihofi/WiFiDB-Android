@@ -38,4 +38,7 @@
     <string name="status_disconnected">Verbind. getrennt</string>
     <string name="status_offlinewifirecording">Offline Aufzeichnung</string>
     <string name="status_scanevery_x_seconds">Neuscan alle %o sek.</string>
+    <string name="msg_recordsmigration_title">Datensätze migrieren</string>
+    <string name="msg_recordsmigration_text">Bestehende Datensätze werden migriert... Einen Moment bitte</string>
+    <string name="toast_x_records_migrated">%o Datensätze wurden migriert</string>
 </resources>

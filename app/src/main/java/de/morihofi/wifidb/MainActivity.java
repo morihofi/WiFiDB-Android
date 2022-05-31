@@ -18,9 +18,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.FileUtils;
 import android.os.PowerManager;
 import android.os.Process;
 import android.os.StrictMode;
@@ -42,12 +44,28 @@ import org.json.JSONObject;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -364,6 +382,9 @@ public class MainActivity extends AppCompatActivity{
 
         updateofflinerecordsnumber();
 
+        //Check for existing records.json and auto migrate
+        DoRecordsMigration();
+
 
         IntentFilter filter = new IntentFilter();
         filter.addAction("wificollectorservice.to.activity.transfer");
@@ -513,125 +534,92 @@ public class MainActivity extends AppCompatActivity{
                 progdlg_upload.setMessage(getApplicationContext().getResources().getString(R.string.msg_uploadrecords_text)); // Setting Message
                 progdlg_upload.setTitle(R.string.msg_uploadrecords_title); // Setting Title
                 progdlg_upload.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style
+                progdlg_upload.setMax(100);
                 progdlg_upload.show(); // Display Progress Dialog
                 progdlg_upload.setCancelable(false);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONArray recordsarr = libfile.getWifiRecords(getApplicationContext());
+                            // JSONArray recordsarr = libfile.getWifiRecords(getApplicationContext());
+
+                            Thread t = new Thread(){
+                                @Override
+                                public void start(){
+                                    if(libfile.countWiFiRecords(getApplicationContext()) != 0){
 
 
 
-/*
-                            for (int i=0; i < recordsarr.length(); i++) {
-                                JSONObject record = null;
-
-                                try {
-                                    record = recordsarr.getJSONObject(i);
-
-
-                                    String responsestr = sendBodyOverHTTP(record.toString(),WiFiCollectorService.masterserver_rest);
-                                    JSONObject responseobj = new JSONObject(responsestr);
+                                        OkHttpClient client = new OkHttpClient.Builder()
+                                                .connectTimeout(10, TimeUnit.SECONDS)
+                                                .writeTimeout(60* 5, TimeUnit.SECONDS)
+                                                .readTimeout(60 * 5, TimeUnit.SECONDS)
+                                                .build();
 
 
-                                    if(!responseobj.getString("status").equals("ok")){
-                                        throw new Exception("Server doesnt accept our request");
-                                    }
+                                        File path = getApplicationContext().getFilesDir();
+                                        File recordsfile = new File(path, "records.jsonl");
+                                        try {
 
-                                } catch (Exception e) {
+                                            RequestBody formBody = new MultipartBody.Builder()
+                                                    .setType(MultipartBody.FORM)
+                                                    .addFormDataPart("file", recordsfile.getName(),
+                                                            RequestBody.create(MediaType.parse("text/plain"), recordsfile))
+                                                    .build();
+                                            Request request = new Request.Builder()
+                                                    .url(WiFiCollectorService.masterserver_restJSONL)
+                                                    .post(formBody)
+                                                    .build();
 
-                                    showAlert("There was an error during uploading: " + e.getMessage() + "\n Please try again later.","Error");
-                                    e.printStackTrace();
-                                    break;
-                                }
+                                            Response response = client.newCall(request).execute();
 
-                                progdlg_upload.setProgress(i);
-
-                            }
-
-                            */
-                           Thread t = new Thread(){
-                               @Override
-                               public void start(){
-                                   if(libfile.getWifiRecords(getApplicationContext()).length() != 0){
-
-
-
-                                   OkHttpClient client = new OkHttpClient.Builder()
-                                           .connectTimeout(10, TimeUnit.SECONDS)
-                                           .writeTimeout(30, TimeUnit.SECONDS)
-                                           .readTimeout(60 * 5, TimeUnit.SECONDS)
-                                           .build();
+                                            if(response.code() != 200){
+                                                throw new Exception("Response code " + response.code() + " (" + Tools.getHTTPMessageFromStatusCode(response.code()) + ")");
+                                            }else{
+                                                recordsfile.delete();
+                                                runOnUiThread(() -> {
+                                                    showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_text), getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_title));
+                                                });
+                                            }
 
 
-                                   File path = getApplicationContext().getFilesDir();
-                                   File file = new File(path, "records.json");
-                                   try {
 
-                                       RequestBody formBody = new MultipartBody.Builder()
-                                               .setType(MultipartBody.FORM)
-                                               .addFormDataPart("file", file.getName(),
-                                                       RequestBody.create(MediaType.parse("application/json"), file))
-                                               .build();
-                                       Request request = new Request.Builder()
-                                               .url(WiFiCollectorService.masterserver_rest)
-                                               .post(formBody)
-                                               .build();
 
-                                       Response response = client.newCall(request).execute();
-
-                                        if(response.code() != 200){
-                                            throw new Exception("The response of the server was not successful. Response code " + response.code());
-                                        }else{
-                                            file.delete();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                             runOnUiThread(() -> {
-                                                showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_text), getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_title));
+                                                //Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                                                showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadfailed_text) + "\n\nDetails:\n" + e.getMessage(), getApplicationContext().getResources().getString(R.string.msg_uploadfailed_title));
                                             });
+
                                         }
 
 
 
 
-                                   } catch (Exception e) {
-                                       e.printStackTrace();
-                                       runOnUiThread(() -> {
-                                           //Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                                           showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadfailed_text) + "\n\nDetails:\n" + e.getMessage(), getApplicationContext().getResources().getString(R.string.msg_uploadfailed_title));
-                                       });
+                                    }else{
+                                        runOnUiThread(() -> {
+                                            showAlert(getApplicationContext().getResources().getString(R.string.msg_nothingtoupload_text), getApplicationContext().getResources().getString(R.string.msg_nothingtoupload_title));
+                                        });
+                                    }
 
-                                   }
+                                    progdlg_upload.dismiss();
 
+                                    //
 
+                                    runOnUiThread(() -> {
+                                        updateofflinerecordsnumber();
+                                    });
 
-
-                                   }else{
-                                       runOnUiThread(() -> {
-                                           showAlert(getApplicationContext().getResources().getString(R.string.msg_nothingtoupload_text), getApplicationContext().getResources().getString(R.string.msg_nothingtoupload_title));
-                                       });
-                                   }
-
-                                   progdlg_upload.dismiss();
-
-                                 //
-
-                                   runOnUiThread(() -> {
-                                       updateofflinerecordsnumber();
-                                   });
-
-                               }
-                           };
+                                }
+                            };
                             t.start();
 
 
 
 
 
-
-
-
-
-                        } catch (Exception e) {
+                        }catch (Exception e){
                             e.printStackTrace();
                         }
                     }
@@ -641,9 +629,79 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    /**
+     * This function does migrate offline records from json array to jsonl format (one json object each line)
+     */
+    private void DoRecordsMigration() {
+        //Do migration if file exists
+        if(libfile.existsFile(getApplicationContext(),"records.json")){
+            ProgressDialog progressDialog;
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setMax(100); // Progress Dialog Max Value --> updated later
+            progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.msg_recordsmigration_text)); // Setting Message
+            progressDialog.setTitle(R.string.msg_recordsmigration_title); // Setting Title
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL); // Progress Dialog Style Horizontal
+            progressDialog.show(); // Display Progress Dialog
+            progressDialog.setCancelable(false);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        String orgcontent = libfile.readFromFile(getApplicationContext(),"records.json", false);
+                        JSONArray orgcontentobj;
+
+                        if(orgcontent == null){
+                            orgcontentobj = new JSONArray();
+                        }else{
+                            try {
+                                orgcontentobj = new JSONArray(orgcontent);
+                            } catch (JSONException e) {
+                                orgcontentobj = new JSONArray();
+                            }
+                        }
+                        progressDialog.setMax(orgcontentobj.length()); // Progress Dialog Max Value
+
+                        int i = 0;
+                        while (true) {
+
+                            progressDialog.setProgress(i);
+
+                            libfile.appendToFile(getApplicationContext(),"records.jsonl",orgcontentobj.get(i).toString(),false);
+
+                            i++;
+                            if(orgcontentobj.length() == i){
+                                break;
+                            }
+
+                        }
+
+                        progressDialog.dismiss();
+
+                        final int i_migrated = i;
+                        if (i_migrated != 0){
+                            runOnUiThread(() -> Toast.makeText(MainActivity.this, String.format(getApplicationContext().getResources().getString(R.string.toast_x_records_migrated),i_migrated),Toast.LENGTH_LONG).show());
+                        }
+
+                        libfile.deleteFile(getApplicationContext(),"records.json");
+
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+
+
+        }
+
+    }
+
     private void updateofflinerecordsnumber() {
 
-        lblofflinerecords.setText(String.format(getApplicationContext().getResources().getString(R.string.num_offline_records), libfile.getWifiRecords(getApplicationContext()).length()));
+        lblofflinerecords.setText(String.format(getApplicationContext().getResources().getString(R.string.num_offline_records), libfile.countWiFiRecords(getApplicationContext())));
 
 
     }
