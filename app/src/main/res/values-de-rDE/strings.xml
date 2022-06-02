@@ -41,4 +41,15 @@
     <string name="msg_recordsmigration_title">Datensätze migrieren</string>
     <string name="msg_recordsmigration_text">Bestehende Datensätze werden migriert... Einen Moment bitte</string>
     <string name="toast_x_records_migrated">%o Datensätze wurden migriert</string>
+    <string name="action_viewdbstatus">Datenbankstatus anzeigen</string>
+    <string name="lblcurrentsetsprocessedwval">Noch zu verarbeitende Datensätze: %o</string>
+    <string name="lblwifinetworksinonlinedbwval">WLAN Netzwerke in der Datenbank: %o</string>
+    <string name="btn_getdatabasestatus_connect">Verbinden</string>
+    <string name="btn_getdatabasestatus_disconnect">Trennen</string>
+    <string name="status_connected_short">Verbunden</string>
+    <string name="status_disconnected_short">Getrennt</string>
+    <string name="status_wifinetworks">WLAN Netze: %o</string>
+    <string name="status_gps_searching">Suchen...</string>
+    <string name="status_gps_ok">OK (%o m)</string>
+    <string name="app_service_collectionservice">WlanDB WLAN Sammeldienst</string>
 </resources>

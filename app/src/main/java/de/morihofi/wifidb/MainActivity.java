@@ -18,11 +18,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.FileUtils;
 import android.os.PowerManager;
 import android.os.Process;
 import android.os.StrictMode;
@@ -44,28 +42,12 @@ import org.json.JSONObject;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -154,6 +136,9 @@ public class MainActivity extends AppCompatActivity{
         switch(item.getItemId()){
             case R.id.men_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.men_viewdbstatus:
+                startActivity(new Intent(this, DatabaseOnlineStatusActivity.class));
                 return true;
             default:
                 return true;

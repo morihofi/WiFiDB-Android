@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="de.morihofi.wifidb">
     <!-- Always include this permission -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Include only if your app benefits from precise location access. -->
@@ -10,8 +11,11 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+    <!--uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"
+        tools:ignore="MockLocation,ProtectedPermissions" /-->
+
     <application
-        android:name="de.morihofi.wifidb.App"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,11 +24,14 @@
         android:theme="@style/Theme.WifiDB"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="de.morihofi.wifidb.SettingsActivity"
+            android:name=".DatabaseOnlineStatusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name="de.morihofi.wifidb.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +40,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="de.morihofi.wifidb.WiFiCollectorService" />
+        <service android:name=".WiFiCollectorService" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -45,7 +52,5 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
     </application>
-
-
 
 </manifest>

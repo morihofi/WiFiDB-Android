@@ -54,6 +54,17 @@
     <string name="msg_recordsmigration_title">Migrating records</string>
     <string name="msg_recordsmigration_text">Migrating your existing records. Please wait...</string>
     <string name="toast_x_records_migrated">%o records has been migrated</string>
+    <string name="action_viewdbstatus">View Database Status</string>
+    <string name="lblcurrentsetsprocessedwval">Datasets in processing-queue: %o</string>
+    <string name="lblwifinetworksinonlinedbwval">WiFi networks in database: %o</string>
+    <string name="btn_getdatabasestatus_connect">Connect</string>
+    <string name="btn_getdatabasestatus_disconnect">Disconnect</string>
+    <string name="status_connected_short">Connected</string>
+    <string name="status_disconnected_short">Disconnected</string>
+    <string name="status_wifinetworks">WiFi Networks: %o</string>
+    <string name="status_gps_searching">Searching...</string>
+    <string name="status_gps_ok">OK (%o m)</string>
+    <string name="app_service_collectionservice">WiFiDB Collection Service</string>
 
 
 </resources>

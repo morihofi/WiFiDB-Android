@@ -50,6 +50,7 @@ public class WiFiCollectorService extends Service implements LocationListener {
     public static WebSocketClient wsclient;
 
     public static String masterserver_ws = "ws" + Config.getSecureCharIfNeeded() + "://" + Config.masterserver + "/api/ws"; // "ws://192.168.178.43:8080/wifidb-server/api/ws"; //
+    @Deprecated
     public static String masterserver_rest =  "http" + Config.getSecureCharIfNeeded() + "://"  + Config.masterserver + "/api/recordsubmit"; // "http://192.168.178.43:8080/wifidb-server/api/recordsubmit"; //
     public static String masterserver_restJSONL =  "http" + Config.getSecureCharIfNeeded() + "://"  + Config.masterserver + "/api/recordsubmitJSONL"; // "http://192.168.178.43:8080/wifidb-server/api/recordsubmit"; //
 
@@ -62,7 +63,6 @@ public class WiFiCollectorService extends Service implements LocationListener {
         super.onCreate();
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -72,6 +72,7 @@ public class WiFiCollectorService extends Service implements LocationListener {
         Intent notifIntent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = null;
 
+        //This fixes the crash under Android 12
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             //Android 12 or higher
             pendingIntent = PendingIntent.getActivity(context, 0, notifIntent, PendingIntent.FLAG_MUTABLE);
@@ -82,7 +83,7 @@ public class WiFiCollectorService extends Service implements LocationListener {
 
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle("WiFiDB Collection Service")
+                .setContentTitle(context.getString(R.string.app_service_collectionservice))
                 .setContentText(content)
                 .setSmallIcon(R.drawable.ic_wifi)
                 .setContentIntent(pendingIntent)
@@ -150,6 +151,7 @@ public class WiFiCollectorService extends Service implements LocationListener {
 
                     startForeground(1, getNotification("Connection closed. Exit code: " + code + "; Reason: " + reason,getApplicationContext()));
 
+
                 }
 
                 @Override
@@ -194,24 +196,31 @@ public class WiFiCollectorService extends Service implements LocationListener {
                             String gpsstatus = "...";
 
                             if(loc_lat == 0 || loc_lon == 0){
-                                gpsstatus = "Searching...";
+                                gpsstatus = getApplicationContext().getString(R.string.status_gps_searching);
                             }else{
-                                gpsstatus = "OK";
+                                gpsstatus = String.format(getApplicationContext().getString(R.string.status_gps_ok), loc_radius);
+
+
                             }
 
-
+                            String connstatus = "" ;
 
                             if(offlinemode){
-                                startForeground(1, getNotification(
-                                        "Offline Mode | " +
-                                                "WiFi Networks: " + nearnetworks + " | GPS: " + gpsstatus
-                                        ,getApplicationContext()));
+                                connstatus = getApplicationContext().getString(R.string.offline_mode);
                             }else{
-                                startForeground(1, getNotification(
-                                        "WS Connected: " + wsclient.isOpen() + " | " +
-                                                "WiFi Networks: " + nearnetworks + " | GPS: " + gpsstatus
-                                        ,getApplicationContext()));
+
+                                if(wsclient.isOpen()){
+                                    connstatus = getApplicationContext().getString(R.string.status_connected_short);
+                                }else{
+                                    connstatus = getApplicationContext().getString(R.string.status_disconnected_short);
+                                }
                             }
+
+
+                            startForeground(1, getNotification(connstatus + " | " + String.format(getApplicationContext().getString(R.string.status_wifinetworks), nearnetworks) + " | GPS: " + gpsstatus, getApplicationContext()));
+
+
+
 
 
 
@@ -238,11 +247,11 @@ public class WiFiCollectorService extends Service implements LocationListener {
                             e.printStackTrace();
                         }
                     }
-
+/*
                     if(!offlinemode){
                         wsclient.close();
                     }
-
+*/
 
 
 
@@ -308,6 +317,7 @@ public class WiFiCollectorService extends Service implements LocationListener {
         local.putExtra("gps_state", gpsstate);
         local.putExtra("gps_lat", loc_lat);
         local.putExtra("gps_lon", loc_lon);
+        local.putExtra("gps_radius", loc_radius);
         local.putExtra("is_scan_running", scanRunning);
         local.putExtra("rescan_interval", rescan_interval);
         local.putExtra("stopflag", stopflag);
