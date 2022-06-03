@@ -558,12 +558,19 @@ public class MainActivity extends AppCompatActivity{
 
                                             Response response = client.newCall(request).execute();
 
+
+
                                             if(response.code() != 200){
                                                 throw new Exception("Response code " + response.code() + " (" + Tools.getHTTPMessageFromStatusCode(response.code()) + ")");
                                             }else{
+
+                                                JSONObject responsejson = new JSONObject(response.body().string());
+
+                                                String scanid = responsejson.getString("scanid");
+
                                                 recordsfile.delete();
                                                 runOnUiThread(() -> {
-                                                    showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_text), getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_title));
+                                                    showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_text) + "\n\nScanID: " + scanid, getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_title));
                                                 });
                                             }
 
