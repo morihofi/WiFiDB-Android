@@ -65,6 +65,9 @@
     <string name="status_gps_searching">Searching...</string>
     <string name="status_gps_ok">OK (%o m)</string>
     <string name="app_service_collectionservice">WiFiDB Collection Service</string>
+    <string name="msg_nomasterserver_title">No Server</string>
+    <string name="msg_nomasterserver_text">No server available to submit. Please restart this app. It will now end.</string>
+    <string name="previousscans">Previous Scans</string>
 
 
 </resources>

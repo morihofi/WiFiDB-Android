@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.stream.Stream;
 
@@ -42,8 +43,8 @@ public class libfile {
         }
     }
     public static String readFromFile(Context c, String fileName, Boolean showerrortoastonfail){
-        System.out.println("Reading from file " + fileName);
-        File path = c.getFilesDir();
+       System.out.println("Reading from file " + fileName);
+       File path = c.getFilesDir();
        File readFrom = new File(path, fileName);
        byte[] content = new byte[(int) readFrom.length()];
 
@@ -82,8 +83,30 @@ public class libfile {
         }
     }
 
+    public static void addScanID(Context c, String scanid) throws JSONException {
+        long unixTime = System.currentTimeMillis() / 1000L;
+        String filename = "scans.json";
+        String orgcontent = readFromFile(c,filename, false);
+        JSONArray orgcontentobj;
+        if(orgcontent == null){
+            orgcontentobj = new JSONArray();
+        }else{
+            try {
+                orgcontentobj = new JSONArray(orgcontent);
+            } catch (JSONException e) {
+                orgcontentobj = new JSONArray();
+            }
+        }
+        JSONObject o = new JSONObject();
+        o.put("scanid",scanid);
+        o.put("time",unixTime);
+
+        orgcontentobj.put(o);
+
+        writeToFile(c, filename, orgcontentobj.toString(), true);
 
 
+    }
 
     public static void appendWifiRecord(Context c, JSONObject wifirecordobj)  {
 

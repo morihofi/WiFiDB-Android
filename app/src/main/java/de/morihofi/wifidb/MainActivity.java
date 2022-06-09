@@ -140,6 +140,9 @@ public class MainActivity extends AppCompatActivity{
             case R.id.men_viewdbstatus:
                 startActivity(new Intent(this, DatabaseOnlineStatusActivity.class));
                 return true;
+            case R.id.men_previousscans:
+                startActivity(new Intent(this, PreviousScansActivity.class));
+                return true;
             default:
                 return true;
 
@@ -497,10 +500,9 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v) {
 
 
+killApp();
 
 
-                int id= Process.myPid();
-                Process.killProcess(id);
 
             }
         });
@@ -510,6 +512,7 @@ public class MainActivity extends AppCompatActivity{
                 updateofflinerecordsnumber();
             }
         });
+
 
 
         btnuploadofflinerecs.setOnClickListener(new View.OnClickListener() {
@@ -531,15 +534,61 @@ public class MainActivity extends AppCompatActivity{
                             Thread t = new Thread(){
                                 @Override
                                 public void start(){
+
+
+                                    JSONObject serviceinfo = null;
+
+                                    try {
+
+                                        if(Config.masterserver.equals("") || Config.masterserver == null){
+                                            throw new Exception("No Masterserver");
+
+                                        }
+                                        serviceinfo = Config.getServiceInfo();
+
+                                        if(
+                                                !serviceinfo.has("timeout_connect") ||
+                                                        !serviceinfo.has("timeout_write") ||
+                                                        !serviceinfo.has("timeout_read")
+                                        ){
+                                            throw new Exception("No Timeouts in Server Data");
+                                        }
+
+
+
+                                    } catch (Exception e) {
+                                        //e.printStackTrace();
+                                       runOnUiThread(() -> {
+                                            AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                                            dialog.setTitle( getApplicationContext().getResources().getString(R.string.msg_nomasterserver_title) )
+                                                    .setIcon(R.drawable.ic_wifi)
+                                                    .setMessage(getApplicationContext().getResources().getString(R.string.msg_nomasterserver_text))
+                                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialoginterface, int i) {
+                                                            killApp();
+                                                        }
+                                                    }).show();
+                                        });
+
+
+                                    }
+
+
                                     if(libfile.countWiFiRecords(getApplicationContext()) != 0){
 
 
 
-                                        OkHttpClient client = new OkHttpClient.Builder()
-                                                .connectTimeout(10, TimeUnit.SECONDS)
-                                                .writeTimeout(60* 5, TimeUnit.SECONDS)
-                                                .readTimeout(60 * 5, TimeUnit.SECONDS)
-                                                .build();
+
+                                        OkHttpClient client = null;
+                                        try {
+                                            client = new OkHttpClient.Builder()
+                                                    .connectTimeout(serviceinfo.getInt("timeout_connect"), TimeUnit.SECONDS)
+                                                    .writeTimeout(serviceinfo.getInt("timeout_write"), TimeUnit.SECONDS)
+                                                    .readTimeout(serviceinfo.getInt("timeout_read"), TimeUnit.SECONDS)
+                                                    .build();
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
 
 
                                         File path = getApplicationContext().getFilesDir();
@@ -569,6 +618,8 @@ public class MainActivity extends AppCompatActivity{
                                                 String scanid = responsejson.getString("scanid");
 
                                                 recordsfile.delete();
+                                                libfile.addScanID(getApplicationContext(), scanid);
+
                                                 runOnUiThread(() -> {
                                                     showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_text) + "\n\nScanID: " + scanid, getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_title));
                                                 });
@@ -619,6 +670,11 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+    }
+
+    private void killApp() {
+            int id= Process.myPid();
+            Process.killProcess(id);
     }
 
     /**

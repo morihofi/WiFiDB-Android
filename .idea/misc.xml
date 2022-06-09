@@ -5,9 +5,11 @@
       <map>
         <entry key="app/src/main/res/layout/activity_database_online_status.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3411458333333333" />
+        <entry key="app/src/main/res/layout/activity_previous_scans.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.24479166666666666" />
         <entry key="app/src/main/res/layout/activity_show_on_map.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_upload.xml" value="0.22916666666666666" />
+        <entry key="app/src/main/res/layout/listview_singleline.xml" value="1.524671052631579" />
         <entry key="app/src/main/res/layout/settings_activity.xml" value="0.22395833333333334" />
         <entry key="app/src/main/res/menu/main_main.xml" value="0.33" />
         <entry key="app/src/main/res/xml/file_provider_paths.xml" value="1.524671052631579" />
