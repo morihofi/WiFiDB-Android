@@ -55,4 +55,14 @@
     <string name="msg_nomasterserver_title">Kein Server</string>
     <string name="msg_nomasterserver_text">Kein Server zum übermitteln verfügbar. Bitte starten Sie diese App erneut. Sie wird jetzt beendet.</string>
     <string name="previousscans">Letzte Scans</string>
+    <string name="msg_apptoold_title">Version zu alt</string>
+    <string name="msg_apptoold_text">Ihre aktuell ausgeführte Version dieser App ist zu alt. Bitte installieren Sie eine neuere Version. Diese App wird jetzt beendet</string>
+    <string name="action_previousscans">Letzte Scans</string>
+    <string name="action_clearlist">Liste leeren</string>
+    <string name="msg_clearlist_title">Liste leeren</string>
+    <string name="msg_clearlist_text">Möchten Sie diese Liste wirklich leeren?</string>
+    <string name="msgaction_no">Nein</string>
+    <string name="msgaction_yes">Ja</string>
+    <string name="msg_scanthrottlingenabled_title">WLAN-Scan-Drosslung</string>
+    <string name="msg_scanthrottlingenabled_text">Die WLAN-Scan-Drosselung ist aktiviert. Bitte deaktivieren Sie diese Option in den Entwickleroptionen. Sie befindet sich in der Kategorie Netzwerk > \"WiFi-Scan-Drosslung\" (oder so ähnlich)</string>
 </resources>

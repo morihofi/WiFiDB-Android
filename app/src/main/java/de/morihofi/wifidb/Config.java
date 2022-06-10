@@ -14,6 +14,7 @@ public class Config {
     //192.168.178.43:8080/wifidb-server
     public static final String masterserver = getMasterserver(); //"tomcat.rs1.morihofi.de/wifidb-server"; //without / at the end
     public static final Boolean masterserver_usetls = getMasterserverTLS(); //false;
+    public static final int min_supported_version = getMinSupportedVersion();
 
     public static String getSecureCharIfNeeded(){
 
@@ -90,7 +91,21 @@ public class Config {
 
         return false;
     }
+    public static int getMinSupportedVersion(){
+        try {
+            JSONObject service = getServiceInfo();
+            if(service != null){
+                return service.getInt("client_min_version");
+            }else{
+                return 0;
+            }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
 
 
 }

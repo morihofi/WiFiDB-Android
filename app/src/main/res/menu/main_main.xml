@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/men_viewdbstatus"
+        android:id="@+id/men_clearprevscanslist"
         android:icon="@drawable/ic_baseline_cloud_24"
         android:title="@string/action_viewdbstatus"
         android:visible="false"
@@ -11,7 +11,7 @@
     <item
         android:id="@+id/men_previousscans"
         android:icon="@drawable/ic_baseline_history_24"
-        android:title="@string/action_viewdbstatus"
+        android:title="@string/action_previousscans"
         android:visible="true"
         app:showAsAction="ifRoom" />
     <item

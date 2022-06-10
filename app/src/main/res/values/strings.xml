@@ -68,6 +68,16 @@
     <string name="msg_nomasterserver_title">No Server</string>
     <string name="msg_nomasterserver_text">No server available to submit. Please restart this app. It will now end.</string>
     <string name="previousscans">Previous Scans</string>
+    <string name="msg_apptoold_title">App Version too old</string>
+    <string name="msg_apptoold_text">You installed version of this app is too old. Please download a newer one. Exiting now...</string>
+    <string name="action_previousscans">Previous Scans</string>
+    <string name="action_clearlist">Clear list</string>
+    <string name="msg_clearlist_title">Clear list</string>
+    <string name="msg_clearlist_text">Do you really want to clear this list?</string>
+    <string name="msgaction_yes">Yes</string>
+    <string name="msgaction_no">No</string>
+    <string name="msg_scanthrottlingenabled_title">WiFi Scan throttling</string>
+    <string name="msg_scanthrottlingenabled_text">WiFi Scan throttling is enabled. Please disable it in the developer options. Its located in the category Network > \"WiFi Scan throttle\" (or something like that)</string>
 
 
 </resources>

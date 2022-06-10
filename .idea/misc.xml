@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/layout/listview_singleline.xml" value="1.524671052631579" />
         <entry key="app/src/main/res/layout/settings_activity.xml" value="0.22395833333333334" />
         <entry key="app/src/main/res/menu/main_main.xml" value="0.33" />
+        <entry key="app/src/main/res/menu/menu_previousscans.xml" value="0.5" />
         <entry key="app/src/main/res/xml/file_provider_paths.xml" value="1.524671052631579" />
         <entry key="app/src/main/res/xml/root_preferences.xml" value="0.33" />
       </map>

@@ -17,8 +17,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -137,7 +139,7 @@ public class MainActivity extends AppCompatActivity{
             case R.id.men_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
-            case R.id.men_viewdbstatus:
+            case R.id.men_clearprevscanslist:
                 startActivity(new Intent(this, DatabaseOnlineStatusActivity.class));
                 return true;
             case R.id.men_previousscans:
@@ -304,6 +306,27 @@ public class MainActivity extends AppCompatActivity{
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
+            int version = pInfo.versionCode;
+
+            if(version < Config.min_supported_version){
+
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                dialog.setTitle( getApplicationContext().getResources().getString(R.string.msg_apptoold_title) )
+                        .setIcon(R.drawable.ic_baseline_browser_updated_24)
+                        .setMessage(getApplicationContext().getResources().getString(R.string.msg_apptoold_text))
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialoginterface, int i) {
+                                killApp();
+                            }
+                        }).show();
+
+            }
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Intent intent = new Intent();
@@ -318,7 +341,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-        } else {
+            } else {
                 System.out.println("App does not ignore Battery optimations");
              //   intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
              //   intent.setData(Uri.parse("package:" + packageName));
@@ -344,6 +367,55 @@ public class MainActivity extends AppCompatActivity{
 
 
             }
+
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            //check if wifi scan throttle is enabled
+            Boolean isthrottleenabled = false;
+            try {
+                if(Settings.Global.getInt(this.getContentResolver(), "wifi_scan_throttle_enabled") == 1){
+                    //check if wifi scan throttle is enabled
+                    System.out.println("throttle enabled");
+                    isthrottleenabled = true;
+                }else{
+                    //check if wifi scan throttle is disabled, all good!
+                    System.out.println("throttle disabled");
+                }
+            } catch (Settings.SettingNotFoundException e) {
+                System.out.println("throttle not found");
+            }
+            //First option may not work on all android devices
+            if(!isthrottleenabled){
+                WifiManager wmgr = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                if (wmgr.isScanThrottleEnabled()) {
+                    isthrottleenabled = true;
+                }
+            }
+
+            if(isthrottleenabled){
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder
+                        .setMessage(R.string.msg_scanthrottlingenabled_text)
+                        .setTitle(R.string.msg_scanthrottlingenabled_title)
+                        .setPositiveButton(R.string.btn_opensettings, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
+                            }
+                        })
+                        .setNegativeButton(R.string.btn_maybelater, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                // Create the AlertDialog object and return it
+                builder.create().show();
+            }
+
+
+
+
+
 
         }
 
