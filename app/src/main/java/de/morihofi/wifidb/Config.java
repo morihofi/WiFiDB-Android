@@ -12,9 +12,9 @@ import okhttp3.Response;
 
 public class Config {
     //192.168.178.43:8080/wifidb-server
-    public static final String masterserver = getMasterserver(); //"tomcat.rs1.morihofi.de/wifidb-server"; //without / at the end
-    public static final Boolean masterserver_usetls = getMasterserverTLS(); //false;
-    public static final int min_supported_version = getMinSupportedVersion();
+    public static String masterserver = ""; //"tomcat.rs1.morihofi.de/wifidb-server"; //without / at the end
+    public static Boolean masterserver_usetls = false; //false;
+    public static int min_supported_version = 0;
 
     public static String getSecureCharIfNeeded(){
 

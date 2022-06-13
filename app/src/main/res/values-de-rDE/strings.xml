@@ -65,4 +65,8 @@
     <string name="msgaction_yes">Ja</string>
     <string name="msg_scanthrottlingenabled_title">WLAN-Scan-Drosslung</string>
     <string name="msg_scanthrottlingenabled_text">Die WLAN-Scan-Drosselung ist aktiviert. Bitte deaktivieren Sie diese Option in den Entwickleroptionen. Sie befindet sich in der Kategorie Netzwerk > \"WiFi-Scan-Drosslung\" (oder so ähnlich)</string>
+    <string name="msg_initializing_title">Initialisiere</string>
+    <string name="msg_initializing_text">Bitte warten Sie, während eine Verbindung zu unserem Server hergestellt wird. Dies kann einen Augenblick dauern...</string>
+    <string name="msg_noonlinerecording_title">Kein Online Modus möglich</string>
+    <string name="msg_noonlinerecording_text">Der Online-Modus wird in dieser Version von Android nicht unterstützt. Android 5 und höher werden unterstützt. Bitte verwenden Sie den Offline-Modus (umstellbar in den Einstellungen dieser App).</string>
 </resources>

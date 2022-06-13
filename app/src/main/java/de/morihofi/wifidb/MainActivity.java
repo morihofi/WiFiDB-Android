@@ -442,6 +442,8 @@ public class MainActivity extends AppCompatActivity{
 
         updateofflinerecordsnumber();
 
+        InitializeServerVariables();
+
         //Check for existing records.json and auto migrate
         DoRecordsMigration();
 
@@ -530,6 +532,12 @@ public class MainActivity extends AppCompatActivity{
         btnstart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
+                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+                    if(!preferences.getBoolean("offline_mode",false)){
+                        showAlert(getApplicationContext().getResources().getString(R.string.msg_noonlinerecording_text),getApplicationContext().getResources().getString(R.string.msg_noonlinerecording_title));
+                        return;
+                    }
+                }
 
                 btnstart.setEnabled(false);
                 btnstop.setEnabled(true);
@@ -818,6 +826,49 @@ killApp();
         }
 
     }
+
+    private void InitializeServerVariables() {
+        //Do variable initialization
+
+            ProgressDialog progressDialog;
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.msg_initializing_text)); // Setting Message
+            progressDialog.setTitle(R.string.msg_initializing_title); // Setting Title
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Horizontal
+            progressDialog.show(); // Display Progress Dialog
+            progressDialog.setCancelable(false);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        System.out.println("Get Masterserver...");
+                        Config.masterserver = Config.getMasterserver();
+
+                        //Android 4.x no tls
+                        System.out.println("Get TLS support-status...");
+                        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+                            Config.masterserver_usetls = false;
+                        }else{
+                            Config.masterserver_usetls = Config.getMasterserverTLS();
+                        }
+
+                        System.out.println("Get minimum App Service Version...");
+                        Config.min_supported_version = Config.getMinSupportedVersion();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    progressDialog.dismiss();
+                }
+            }).start();
+
+
+
+    }
+
+
+
 
     private void updateofflinerecordsnumber() {
 

@@ -78,6 +78,10 @@
     <string name="msgaction_no">No</string>
     <string name="msg_scanthrottlingenabled_title">WiFi Scan throttling</string>
     <string name="msg_scanthrottlingenabled_text">WiFi Scan throttling is enabled. Please disable it in the developer options. Its located in the category Network > \"WiFi Scan throttle\" (or something like that)</string>
+    <string name="msg_initializing_title">Initializing</string>
+    <string name="msg_initializing_text">Please wait while we establish a connection to our server. This can take a moment</string>
+    <string name="msg_noonlinerecording_title">No Online Mode possible</string>
+    <string name="msg_noonlinerecording_text">Online mode is not supported in this version of Android. Android 5 and higher are supported. Please use offline mode (changeable in the Settings of this App).</string>
 
 
 </resources>

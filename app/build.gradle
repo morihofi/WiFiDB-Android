@@ -7,10 +7,10 @@ android {
 
     defaultConfig {
         applicationId "de.morihofi.wifidb"
-        minSdk 21
+        minSdk 16
         targetSdk 32
-        versionCode 9
-        versionName "1.9"
+        versionCode 10
+        versionName "1.10"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,7 +33,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation "org.java-websocket:Java-WebSocket:1.5.3"
-    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+   // implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation 'com.squareup.okhttp3:okhttp:3.12.13'
+
 
     implementation 'androidx.preference:preference:1.1.1'
     testImplementation 'junit:junit:4.13.2'
