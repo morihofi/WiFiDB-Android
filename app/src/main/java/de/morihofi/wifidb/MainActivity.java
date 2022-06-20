@@ -31,7 +31,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +39,13 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.osmdroid.api.IMapController;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.ITileSource;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -64,12 +70,18 @@ public class MainActivity extends AppCompatActivity{
     Button btnstart = null;
     Button btnstop = null;
     Button btnkill = null;
-    WebView webview = null;
     Button btnuploadofflinerecs = null;
     ProgressDialog progdlg_upload;
     BroadcastReceiver updateUIReciver;
     OkHttpClient client = new OkHttpClient();
     SharedPreferences preferences;
+
+    TextView lbl_status_wifinetworks = null;
+    TextView lbl_status_gpsacc = null;
+    TextView lbl_status_rescanint = null;
+    TextView lbl_status_coordinates = null;
+    TextView lbl_status_status = null;
+    MapView maposm = null;
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -111,7 +123,7 @@ public class MainActivity extends AppCompatActivity{
             // permissions this app might request
         }
     }
-
+/*
     public static void runJavascriptOnWebView(WebView webview, String js) {
         // before Kitkat, the only way to run javascript was to load a url that starts with "javascript:".
         // Starting in Kitkat, the "javascript:" method still works, but it expects the rest of the string
@@ -119,11 +131,11 @@ public class MainActivity extends AppCompatActivity{
         // use the new evaluateJavascript method.
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             webview.loadUrl("javascript:" + js);
-        } else {/* from wwwjava2s.com */
+        } else {
             webview.evaluateJavascript(js, null);
         }
     }
-
+*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -425,9 +437,41 @@ public class MainActivity extends AppCompatActivity{
         btnstart = (Button) findViewById(R.id.btnstart);
         btnstop = (Button) findViewById(R.id.btnstop);
         btnkill = (Button) findViewById(R.id.btnkill);
-        webview = (WebView)  findViewById(R.id.webView);
+        //webview = (WebView)  findViewById(R.id.webView);
         btnuploadofflinerecs = (Button) findViewById(R.id.btnuploadofflinerecs);
 
+        lbl_status_wifinetworks = (TextView) findViewById(R.id.lbl_status_wifinetworks);
+        lbl_status_gpsacc = (TextView) findViewById(R.id.lbl_status_gpsacc);
+        lbl_status_rescanint = (TextView) findViewById(R.id.lbl_status_rescanint);
+        lbl_status_coordinates = (TextView) findViewById(R.id.lbl_status_coordinates);
+        lbl_status_status = (TextView) findViewById(R.id.lbl_status_status);
+        maposm = (MapView) findViewById(R.id.maposm);
+
+        if(preferences.getBoolean("useonlinemaptiles",true)){
+
+            maposm.setVisibility(View.VISIBLE);
+
+            maposm.setUseDataConnection(true);
+            //maposm.setBuiltInZoomControls(true);
+            maposm.setMultiTouchControls(true);
+            maposm.getController().setZoom(14.0);
+
+            try {
+                PackageManager pm = this.getPackageManager();
+                String packageName = this.getPackageName();
+                PackageInfo pInfo = pm.getPackageInfo(packageName, 0);
+                String version = pInfo.versionName;
+                Configuration.getInstance().setUserAgentValue(this.getPackageName() + "/" + version);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            final ITileSource tileSource = TileSourceFactory.DEFAULT_TILE_SOURCE;
+            maposm.setTileSource(tileSource);
+
+        }else{
+            maposm.setVisibility(View.INVISIBLE);
+        }
 
 
         ActivityCompat.requestPermissions(MainActivity.this,
@@ -437,8 +481,8 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-        webview.getSettings().setJavaScriptEnabled(true);
-        webview.loadUrl("file:///android_asset/status.html");
+        //webview.getSettings().setJavaScriptEnabled(true);
+        //webview.loadUrl("file:///android_asset/status.html");
 
         updateofflinerecordsnumber();
 
@@ -464,48 +508,75 @@ public class MainActivity extends AppCompatActivity{
                     Boolean is_scan_running = intent.getBooleanExtra("is_scan_running", false);
                     int rescan_interval = intent.getIntExtra("rescan_interval", -1);
                     Boolean stopflag = intent.getBooleanExtra("stopflag", false);
-                    Boolean offlinemode = intent.getBooleanExtra("offlinemode", false);
+                    Boolean offlinemode = intent.getBooleanExtra("offlinemode", true);
+                    int gps_acc = intent.getIntExtra("gps_radius", 0);
 
                     if(stopflag){
                         btnstart.setEnabled(true);
                         btnstop.setEnabled(false);
 
-
-                        runJavascriptOnWebView(webview, "updateValue(\"val_title_scaninterval\", \"" + "()" + "\")");
-
-                        runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + "..." + "\")");
-                        runJavascriptOnWebView(webview, "updateValue(\"val_gps\", \"" + "..." + "\")");
-                        runJavascriptOnWebView(webview, "updateValue(\"val_wifi\", \"" + "..." + "\")");
+                        lbl_status_wifinetworks.setText(R.string.status_na);
+                        lbl_status_gpsacc.setText(R.string.status_na);
+                        lbl_status_rescanint.setText(R.string.status_na);
+                        lbl_status_coordinates.setText(R.string.status_na);
+                        lbl_status_status.setText(R.string.status_na);
                     }else{
                         btnstop.setEnabled(true);
                         btnstart.setEnabled(false);
 
-                        runJavascriptOnWebView(webview, "updateValue(\"val_title_scaninterval\", \"" + "(" + String.format(getApplicationContext().getResources().getString(R.string.status_scanevery_x_seconds),rescan_interval) +  ")" + "\")");
+                        lbl_status_rescanint.setText(String.valueOf(rescan_interval) + " s");
+                        lbl_status_wifinetworks.setText(String.valueOf(wifi_networks));
 
-                        runJavascriptOnWebView(webview, "updateValue(\"val_wifi\", \"" + wifi_networks + "\")");
+                        //runJavascriptOnWebView(webview, "updateValue(\"val_title_scaninterval\", \"" + "(" + String.format(getApplicationContext().getResources().getString(R.string.status_scanevery_x_seconds),rescan_interval) +  ")" + "\")");
+
+                        //runJavascriptOnWebView(webview, "updateValue(\"val_wifi\", \"" + wifi_networks + "\")");
 
                         if(gps_state.equals("searching")){
-                            runJavascriptOnWebView(webview, "updateValue(\"val_gps\", \"" + gps_state + "\")");
+
+                            lbl_status_gpsacc.setText(R.string.status_na);
+                            lbl_status_coordinates.setText(R.string.status_gps_searching);
+                            //runJavascriptOnWebView(webview, "updateValue(\"val_gps\", \"" + gps_state + "\")");
                         }else{
-                            runJavascriptOnWebView(webview, "updateValue(\"val_gps\", \"" + libgeo.CoordinateString(loc_lat, loc_lon).replace("\"","\\" + "\"") + "\")");
+                            lbl_status_gpsacc.setText(String.valueOf(gps_acc) + " m");
+                            //runJavascriptOnWebView(webview, "updateValue(\"val_gps\", \"" + libgeo.CoordinateString(loc_lat, loc_lon).replace("\"","\\" + "\"") + "\")");
+                            lbl_status_coordinates.setText(libgeo.CoordinateString(loc_lat, loc_lon));
+
+                            if(preferences.getBoolean("useonlinemaptiles",true)){
+                                IMapController mapController = maposm.getController();
+                                //mapController.setZoom(14.0);
+                                GeoPoint startPoint = new GeoPoint(loc_lat, loc_lon);
+                                mapController.setCenter(startPoint);
+
+                                maposm.getOverlays().clear();
+
+                                Marker startMarker = new Marker(maposm);
+                                startMarker.setPosition(startPoint);
+                                startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                                maposm.getOverlays().add(startMarker);
+                            }
+
                         }
 
                         if(wsstate.equals("disconnected")){
 
 
                             if(offlinemode){
-                                runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_offlinewifirecording) + "\")");
+                                //runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_offlinewifirecording) + "\")");
+                                lbl_status_status.setText(getApplicationContext().getResources().getString(R.string.status_offlinewifirecording));
                             }else{
-                                runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_disconnected) + "\")");
+                                //runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_disconnected) + "\")");
+                                lbl_status_status.setText(getApplicationContext().getResources().getString(R.string.status_disconnected));
                             }
 
 
                         }else{
 
                             if(is_scan_running){
-                                runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_scanningwifinetworks) + "\")");
+                                //runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_scanningwifinetworks) + "\")");
+                                lbl_status_status.setText(getApplicationContext().getResources().getString(R.string.status_scanningwifinetworks));
                             }else{
-                                runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_connected) + "\")");
+                                //runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_connected) + "\")");
+                                lbl_status_status.setText(getApplicationContext().getResources().getString(R.string.status_connected));
                             }
 
                         }
@@ -533,7 +604,7 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
-                    if(!preferences.getBoolean("offline_mode",false)){
+                    if(!preferences.getBoolean("offline_mode",true)){
                         showAlert(getApplicationContext().getResources().getString(R.string.msg_noonlinerecording_text),getApplicationContext().getResources().getString(R.string.msg_noonlinerecording_title));
                         return;
                     }
@@ -544,8 +615,8 @@ public class MainActivity extends AppCompatActivity{
 
                 Intent serviceIntent = new Intent(v.getContext(), WiFiCollectorService.class);
                 serviceIntent.putExtra("action","start");
-                serviceIntent.putExtra("offlinemode", preferences.getBoolean("offline_mode",false));
-                serviceIntent.putExtra("rescan_interval", preferences.getString("general_rescan_interval","1"));
+                serviceIntent.putExtra("offlinemode", preferences.getBoolean("offline_mode",true));
+                serviceIntent.putExtra("rescan_interval", preferences.getString("general_rescan_interval","15"));
                 serviceIntent.putExtra("contributor", preferences.getString("general_contributorname",""));
 
 
@@ -563,6 +634,7 @@ public class MainActivity extends AppCompatActivity{
 
                 btnstart.setEnabled(true);
                 btnstop.setEnabled(false);
+
 
 
                 Intent serviceIntent = new Intent(v.getContext(), WiFiCollectorService.class);

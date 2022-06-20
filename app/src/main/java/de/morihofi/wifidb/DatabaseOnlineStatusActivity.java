@@ -15,7 +15,7 @@ public class DatabaseOnlineStatusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_online_status);
 
-        btnConnect = (Button) findViewById(R.id.btnConnect);
+       // btnConnect = (Button) findViewById(R.id.btnConnect);
 
 
 

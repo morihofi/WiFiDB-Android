@@ -46,10 +46,10 @@
     <string name="msg_nothingtoupload_title">Nothing to upload</string>
     <string name="msg_nothingtoupload_text">Before you can upload records, please collect some WiFi Networks in Offline Mode first</string>
     <string name="num_offline_records">%o offline records</string>
-    <string name="status_offlinewifirecording">Offline WiFi-Recording</string>
+    <string name="status_offlinewifirecording">Offline</string>
     <string name="status_disconnected">Disconnected</string>
-    <string name="status_scanningwifinetworks">Scanning WiFi-networks</string>
-    <string name="status_connected">Connected to Server</string>
+    <string name="status_scanningwifinetworks">Scanning...</string>
+    <string name="status_connected">Connected</string>
     <string name="status_scanevery_x_seconds">Rescan every %o sec.</string>
     <string name="msg_recordsmigration_title">Migrating records</string>
     <string name="msg_recordsmigration_text">Migrating your existing records. Please wait...</string>
@@ -82,6 +82,14 @@
     <string name="msg_initializing_text">Please wait while we establish a connection to our server. This can take a moment</string>
     <string name="msg_noonlinerecording_title">No Online Mode possible</string>
     <string name="msg_noonlinerecording_text">Online mode is not supported in this version of Android. Android 5 and higher are supported. Please use offline mode (changeable in the Settings of this App).</string>
+    <string name="box_hdr_wifinetworks">WiFi Networks</string>
+    <string name="box_hdr_gpsaccuracy">GPS Accuracy</string>
+    <string name="box_hdr_rescaninterval">Rescan Interval</string>
+    <string name="box_hdr_coordinates">Coordinates</string>
+    <string name="status_na" translatable="false">N/A</string>
+    <string name="box_hdr_status">Status</string>
+    <string name="useonlinetiles_title">Enable Online Map Tiles</string>
+    <string name="useonlinetiles_desc">Enables the map function on the main screen of this app. A restart of this app may be required.</string>
 
 
 </resources>

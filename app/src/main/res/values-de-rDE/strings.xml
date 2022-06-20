@@ -33,10 +33,10 @@
     <string name="msg_nothingtoupload_title">Nichts zum hochladen</string>
     <string name="msg_nothingtoupload_text">Bevor Sie Datensätze hochladen können, sammeln Sie bitte zuerst einige WLAN-Netzwerke im Offline-Modus.</string>
     <string name="num_offline_records">%o Offline Datensätze</string>
-    <string name="status_connected">Mit Server verbunden</string>
-    <string name="status_scanningwifinetworks">Scanne nach Netzwerken</string>
-    <string name="status_disconnected">Verbind. getrennt</string>
-    <string name="status_offlinewifirecording">Offline Aufzeichnung</string>
+    <string name="status_connected">Verbunden</string>
+    <string name="status_scanningwifinetworks">Scanen...</string>
+    <string name="status_disconnected">Verbindung getrennt</string>
+    <string name="status_offlinewifirecording">Offline aufz.</string>
     <string name="status_scanevery_x_seconds">Neuscan alle %o sek.</string>
     <string name="msg_recordsmigration_title">Datensätze migrieren</string>
     <string name="msg_recordsmigration_text">Bestehende Datensätze werden migriert... Einen Moment bitte</string>
@@ -69,4 +69,11 @@
     <string name="msg_initializing_text">Bitte warten Sie, während eine Verbindung zu unserem Server hergestellt wird. Dies kann einen Augenblick dauern...</string>
     <string name="msg_noonlinerecording_title">Kein Online Modus möglich</string>
     <string name="msg_noonlinerecording_text">Der Online-Modus wird in dieser Version von Android nicht unterstützt. Android 5 und höher werden unterstützt. Bitte verwenden Sie den Offline-Modus (umstellbar in den Einstellungen dieser App).</string>
+    <string name="box_hdr_wifinetworks">WLAN Netze</string>
+    <string name="box_hdr_gpsaccuracy">GPS Genauigkeit</string>
+    <string name="box_hdr_rescaninterval">Neuscan Interval</string>
+    <string name="box_hdr_coordinates">Koordinaten</string>
+    <string name="box_hdr_status">Status</string>
+    <string name="useonlinetiles_title">Online-Kartenkacheln aktivieren</string>
+    <string name="useonlinetiles_desc">Aktiviert die Kartenfunktion auf dem Hauptbildschirm dieser App. Möglicherweise ist ein Neustart dieser App erforderlich.</string>
 </resources>

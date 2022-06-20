@@ -31,6 +31,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.UUID;
 
 public class WiFiCollectorService extends Service implements LocationListener {
 
@@ -38,6 +39,10 @@ public class WiFiCollectorService extends Service implements LocationListener {
     private double loc_lat = 0;
     private double loc_lon = 0;
     private int loc_radius = 0;
+
+
+
+
     public static Boolean stopflag = false;
     private WifiManager wmgr;
     private int rescan_interval = 0;
@@ -273,6 +278,9 @@ public class WiFiCollectorService extends Service implements LocationListener {
         }else if(iaction.equals("stop")){
             stopForeground(true);
             stopflag = true;
+            loc_lat = 0;
+            loc_lon = 0;
+            loc_radius = 0;
             broadcast();
 
         }
@@ -402,14 +410,18 @@ public class WiFiCollectorService extends Service implements LocationListener {
 
                     jobj.put("networks", arrnetworks);
 
-                    if(wsclient.isOpen()){
-                        wsclient.send(jobj.toString());
-                    }
-                    if(offlinemode){
-                        libfile.appendWifiRecord(getApplicationContext(), jobj);
-                    }
 
 
+                    if(loc_lat == 0 || loc_lon == 0){
+                        //No Position found
+                    }else{
+                        if(wsclient.isOpen()){
+                            wsclient.send(jobj.toString());
+                        }
+                        if(offlinemode){
+                            libfile.appendWifiRecord(getApplicationContext(), jobj);
+                        }
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();

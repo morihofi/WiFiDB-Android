@@ -4,7 +4,7 @@
     <PreferenceCategory android:title="@string/general_header">
         <EditTextPreference
             android:id="@android:id/edit"
-            android:defaultValue="1"
+            android:defaultValue="15"
             android:digits="0123456789"
             android:icon="@drawable/ic_baseline_refresh_24"
             android:inputType="numberDecimal"
@@ -20,16 +20,30 @@
             android:singleLine="true"
             android:title="@string/general_contibutorname"
             app:summary="@string/general_contibutorname_name" /-->
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:icon="@drawable/ic_baseline_map_24"
+            app:key="useonlinemaptiles"
+            app:summary="@string/useonlinetiles_desc"
+            app:title="@string/useonlinetiles_title" />
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/offline_header">
 
         <SwitchPreferenceCompat
+            app:defaultValue="true"
             app:icon="@drawable/ic_baseline_offline"
             app:key="offline_mode"
             app:summary="@string/offline_mode_desc"
             app:title="@string/offline_mode" />
 
-    </PreferenceCategory>
+
+
+
+            </PreferenceCategory>
+
+
 
 </PreferenceScreen>
