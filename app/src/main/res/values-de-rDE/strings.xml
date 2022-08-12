@@ -78,4 +78,19 @@
     <string name="useonlinetiles_desc">Aktiviert die Kartenfunktion auf dem Hauptbildschirm dieser App. Möglicherweise ist ein Neustart dieser App erforderlich.</string>
     <string name="msg_updateofflinerecs_title">Einen Moment bitte...</string>
     <string name="msg_updateofflinerecs_text">Offline Datensätze werden gezählt. Das kann einen Moment dauern</string>
+    <string name="btn_locatemebynetworks">Suche Position über Netzwerke in der Nähe</string>
+    <string name="lbl_latitude_val">Breitengrad: %s</string>
+    <string name="lbl_longitude_val">Längengrad: %s</string>
+    <string name="lbl_accuracy_val">Genauigkeit: %s m</string>
+    <string name="lbl_nominatim_addr">Adresse (über Nominatim):</string>
+    <string name="btn_showonmap">Auf Karte anzeigen</string>
+    <string name="toast_turning_wifi_on">WLAN wird eingeschalten...</string>
+    <string name="men_findpositionbynetwork">Akt. Position durch WLANs finden</string>
+    <string name="msg_searchposition_title">Positionsbestimmung läuft...</string>
+    <string name="msg_searchposition_text_scanwifi">Scanne WLAN Netzwerke in deiner Umgebung...</string>
+    <string name="msg_searchposition_text_srvproc">Verarbeiten der Anfrage auf unserem Server...</string>
+    <string name="msg_searchposition_text_nominatim">Ermiuttle deine Adresse mithilfe von Nominatim...</string>
+    <string name="msg_error_title">Ein Fehler ist aufgetreten</string>
+    <string name="msg_error_text">Es ist etwas schiefgegangen %nDetails: %s %nFalls das Problem weiterhin besteht, starte die App neu</string>
+    <string name="activity_networkpositionfinder">Ermittle Postion über WLAN Netze</string>
 </resources>

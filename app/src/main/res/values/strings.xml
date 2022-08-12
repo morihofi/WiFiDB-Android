@@ -92,6 +92,21 @@
     <string name="useonlinetiles_desc">Enables the map function on the main screen of this app. A restart of this app may be required.</string>
     <string name="msg_updateofflinerecs_title">Please wait...</string>
     <string name="msg_updateofflinerecs_text">Counting offline datasets. This may take a moment</string>
+    <string name="btn_locatemebynetworks">Locate me using near Networks</string>
+    <string name="lbl_latitude_val">Latitude: %s</string>
+    <string name="lbl_longitude_val">Longitude: %s</string>
+    <string name="lbl_accuracy_val">Accuracy: %s m</string>
+    <string name="lbl_nominatim_addr">Address (got using Nominatim):</string>
+    <string name="btn_showonmap">Show on Map</string>
+    <string name="toast_turning_wifi_on">Turning WiFi on...</string>
+    <string name="men_findpositionbynetwork">Find current position by WiFi</string>
+    <string name="msg_searchposition_title">Positioning in progress...</string>
+    <string name="msg_searchposition_text_scanwifi">Scanning near WiFi networks...</string>
+    <string name="msg_searchposition_text_srvproc">Processing your request on our server</string>
+    <string name="msg_searchposition_text_nominatim">Determine your Address using Nominatim...</string>
+    <string name="msg_error_title">An exception has thrown</string>
+    <string name="msg_error_text">Something went wrong.%nDetails: %s %nIf the problem persists, restart the app.</string>
+    <string name="activity_networkpositionfinder">Determine Networks using near WiFi Networks</string>
 
 
 </resources>

@@ -151,11 +151,14 @@ public class MainActivity extends AppCompatActivity{
             case R.id.men_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
-            case R.id.men_clearprevscanslist:
-                startActivity(new Intent(this, DatabaseOnlineStatusActivity.class));
-                return true;
+            //case R.id.men_clearprevscanslist:
+            //    startActivity(new Intent(this, DatabaseOnlineStatusActivity.class));
+            //    return true;
             case R.id.men_previousscans:
                 startActivity(new Intent(this, PreviousScansActivity.class));
+                return true;
+            case R.id.men_findpositionbynetwork:
+                startActivity(new Intent(this, NetworkPositionFinderActivity.class));
                 return true;
             default:
                 return true;
@@ -801,10 +804,8 @@ killApp();
                                     progdlg_upload.dismiss();
 
                                     //
+                                    updateofflinerecordsnumber();
 
-                                    runOnUiThread(() -> {
-                                        updateofflinerecordsnumber();
-                                    });
 
                                 }
                             };
@@ -824,7 +825,7 @@ killApp();
 
     }
 
-    private void killApp() {
+    static void killApp() {
             int id= Process.myPid();
             Process.killProcess(id);
     }
@@ -943,18 +944,30 @@ killApp();
 
 
     private void updateofflinerecordsnumber() {
-        ProgressDialog progressDialog;
 
+        ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(MainActivity.this);
-        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.msg_updateofflinerecs_text)); // Update Offlinecounter Message
-        progressDialog.setTitle(getApplicationContext().getResources().getString(R.string.msg_updateofflinerecs_title)); // Update Offlinecounter Title
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
-        progressDialog.show(); // Display Progress Dialog
-        progressDialog.setCancelable(false);
+        runOnUiThread(() -> {
+
+            progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.msg_updateofflinerecs_text)); // Update Offlinecounter Message
+            progressDialog.setTitle(getApplicationContext().getResources().getString(R.string.msg_updateofflinerecs_title)); // Update Offlinecounter Title
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+            progressDialog.show(); // Display Progress Dialog
+            progressDialog.setCancelable(false);
+        });
+
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    lblofflinerecords.setText(String.format(getApplicationContext().getResources().getString(R.string.num_offline_records), libfile.countWiFiRecords(getApplicationContext())));
+
+                    int n = libfile.countWiFiRecords(getApplicationContext());
+
+
+                    runOnUiThread(() -> {
+                        lblofflinerecords.setText(String.format(getApplicationContext().getResources().getString(R.string.num_offline_records), n));
+                    });
+
+
 
                 } catch (Exception e) {
                     e.printStackTrace();

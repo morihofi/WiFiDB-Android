@@ -15,6 +15,11 @@
         android:visible="true"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/men_findpositionbynetwork"
+        android:icon="@drawable/ic_baseline_location_on_24"
+        android:title="@string/men_findpositionbynetwork"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/men_settings"
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/action_settings" />
