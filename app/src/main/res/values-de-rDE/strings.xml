@@ -76,4 +76,6 @@
     <string name="box_hdr_status">Status</string>
     <string name="useonlinetiles_title">Online-Kartenkacheln aktivieren</string>
     <string name="useonlinetiles_desc">Aktiviert die Kartenfunktion auf dem Hauptbildschirm dieser App. Möglicherweise ist ein Neustart dieser App erforderlich.</string>
+    <string name="msg_updateofflinerecs_title">Einen Moment bitte...</string>
+    <string name="msg_updateofflinerecs_text">Offline Datensätze werden gezählt. Das kann einen Moment dauern</string>
 </resources>

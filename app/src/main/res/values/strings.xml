@@ -90,6 +90,8 @@
     <string name="box_hdr_status">Status</string>
     <string name="useonlinetiles_title">Enable Online Map Tiles</string>
     <string name="useonlinetiles_desc">Enables the map function on the main screen of this app. A restart of this app may be required.</string>
+    <string name="msg_updateofflinerecs_title">Please wait...</string>
+    <string name="msg_updateofflinerecs_text">Counting offline datasets. This may take a moment</string>
 
 
 </resources>

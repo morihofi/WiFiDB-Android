@@ -943,8 +943,26 @@ killApp();
 
 
     private void updateofflinerecordsnumber() {
+        ProgressDialog progressDialog;
 
-        lblofflinerecords.setText(String.format(getApplicationContext().getResources().getString(R.string.num_offline_records), libfile.countWiFiRecords(getApplicationContext())));
+        progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.msg_updateofflinerecs_text)); // Update Offlinecounter Message
+        progressDialog.setTitle(getApplicationContext().getResources().getString(R.string.msg_updateofflinerecs_title)); // Update Offlinecounter Title
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+        progressDialog.show(); // Display Progress Dialog
+        progressDialog.setCancelable(false);
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    lblofflinerecords.setText(String.format(getApplicationContext().getResources().getString(R.string.num_offline_records), libfile.countWiFiRecords(getApplicationContext())));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                progressDialog.dismiss();
+            }
+        }).start();
+
 
 
     }
