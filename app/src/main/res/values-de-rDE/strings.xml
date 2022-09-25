@@ -56,7 +56,7 @@
     <string name="msg_nomasterserver_text">Kein Server zum übermitteln verfügbar. Bitte starten Sie diese App erneut. Sie wird jetzt beendet.</string>
     <string name="previousscans">Letzte Scans</string>
     <string name="msg_apptoold_title">Version zu alt</string>
-    <string name="msg_apptoold_text">Ihre aktuell ausgeführte Version dieser App ist zu alt. Bitte installieren Sie eine neuere Version. Diese App wird jetzt beendet</string>
+    <string name="msg_apptoold_text">Die installierte Version dieser App ist zu alt. Klicken Sie auf OK, um die Einstellungen zu öffnen, und klicken Sie dann auf Nach Updates suchen, um die neueste Version zu installieren.</string>
     <string name="action_previousscans">Letzte Scans</string>
     <string name="action_clearlist">Liste leeren</string>
     <string name="msg_clearlist_title">Liste leeren</string>
@@ -93,4 +93,18 @@
     <string name="msg_error_title">Ein Fehler ist aufgetreten</string>
     <string name="msg_error_text">Es ist etwas schiefgegangen %nDetails: %s %nFalls das Problem weiterhin besteht, starte die App neu</string>
     <string name="activity_networkpositionfinder">Ermittle Postion über WLAN Netze</string>
+    <string name="btn_searchforupdates">Nach Updates suchen</string>
+    <string name="msg_searchforupdates_text">Suche nach Updates...</string>
+    <string name="msg_searchforupdates_title">App-Update</string>
+    <string name="msg_update_maintenance_title">Server Wartungsarbeiten</string>
+    <string name="msg_update_maintenance_text">An unserem Update Server werden derzeit Wartungsarbeiten durchgeführt. Biite versuchen Sie es später erneut.</string>
+    <string name="version">Version %s</string>
+    <string name="msg_update_exception_title">Update fehlgeschlagen</string>
+    <string name="msg_update_downloading_title">App-Update</string>
+    <string name="msg_update_downloading_text">Update wird heruntergeladen... Bitte schalten Sie Ihr Gerät nicht aus oder wechseln Sie die App</string>
+    <string name="msg_update_exception_text">Beim Herunterladen ist ein Fehler aufgetreren: %s</string>
+    <string name="msg_update_install_title">Installiere Update</string>
+    <string name="msg_update_install_text">Bitte warten Sie einen Moment, wärend das Update installiert wird.</string>
+    <string name="msg_update_uptodate_title">App ist aktuell</string>
+    <string name="msg_update_uptodate_text">Sie haben die neuste Version bereits installiert.</string>
 </resources>

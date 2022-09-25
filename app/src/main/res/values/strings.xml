@@ -69,7 +69,7 @@
     <string name="msg_nomasterserver_text">No server available to submit. Please restart this app. It will now end.</string>
     <string name="previousscans">Previous Scans</string>
     <string name="msg_apptoold_title">App Version too old</string>
-    <string name="msg_apptoold_text">You installed version of this app is too old. Please download a newer one. Exiting now...</string>
+    <string name="msg_apptoold_text">Your installed version of this app is too old. Click OK to open Settings and click then on Search for Updates to install the newest version.</string>
     <string name="action_previousscans">Previous Scans</string>
     <string name="action_clearlist">Clear list</string>
     <string name="msg_clearlist_title">Clear list</string>
@@ -107,6 +107,20 @@
     <string name="msg_error_title">An exception has thrown</string>
     <string name="msg_error_text">Something went wrong.%nDetails: %s %nIf the problem persists, restart the app.</string>
     <string name="activity_networkpositionfinder">Determine Networks using near WiFi Networks</string>
+    <string name="version">Version %s</string>
+    <string name="btn_searchforupdates">Search for Updates</string>
+    <string name="msg_searchforupdates_title">App-Update</string>
+    <string name="msg_searchforupdates_text">Searching for Updates...</string>
+    <string name="msg_update_maintenance_title">Server Maintenance</string>
+    <string name="msg_update_maintenance_text">Our update server is currently under maintenance. Please try again later.</string>
+    <string name="msg_update_downloading_title">App-Update</string>
+    <string name="msg_update_downloading_text">Downloading Update... Do not turn off your device or switch the app</string>
+    <string name="msg_update_exception_title">Update failed</string>
+    <string name="msg_update_exception_text">There was an error during downloading: %s</string>
+    <string name="msg_update_install_title">Installing Update</string>
+    <string name="msg_update_install_text">Please wait while the update is installed.</string>
+    <string name="msg_update_uptodate_title">App is up-to-date</string>
+    <string name="msg_update_uptodate_text">You have the newest version already installed, so no update is needed!</string>
 
 
 </resources>

@@ -1,4 +1,4 @@
-package de.morihofi.wifidb;
+package de.morihofi.wifidb.activities;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,9 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +28,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.morihofi.wifidb.Config;
+import de.morihofi.wifidb.R;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -171,6 +170,7 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
                             lbl_accuracy.setText(String.format(getApplicationContext().getString(R.string.lbl_accuracy_val), String.valueOf(acc)));
                             progdlg_status.dismiss();
                             btn_showonmap.setEnabled(true);
+                            btn_locatemebynetworks.setEnabled(true);
                         });
 
 
@@ -184,6 +184,7 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
                                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialoginterface, int i) {
                                         progdlg_status.dismiss();
+                                        btn_locatemebynetworks.setEnabled(true);
                                         btn_showonmap.setEnabled(false);
                                         btn_locatemebynetworks.setEnabled(true);
                                         lat = 0.0;
@@ -213,12 +214,13 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 btn_showonmap.setEnabled(false);
-
+                btn_locatemebynetworks.setEnabled(false);
                 progdlg_status.setMax(100);
                 progdlg_status.setTitle(getApplicationContext().getString(R.string.msg_searchposition_title));
                 progdlg_status.setMessage(getApplicationContext().getString(R.string.msg_searchposition_text_scanwifi));
                 progdlg_status.setCancelable(false);
                 progdlg_status.show();
+
 
                 wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 if (!wifiManager.isWifiEnabled()) {

@@ -1,4 +1,4 @@
-package de.morihofi.wifidb;
+package de.morihofi.wifidb.services;
 
 import static de.morihofi.wifidb.App.CHANNEL_ID;
 
@@ -31,7 +31,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.List;
-import java.util.UUID;
+
+import de.morihofi.wifidb.Config;
+import de.morihofi.wifidb.activities.MainActivity;
+import de.morihofi.wifidb.R;
+import de.morihofi.wifidb.libfile;
 
 public class WiFiCollectorService extends Service implements LocationListener {
 

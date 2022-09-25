@@ -3,8 +3,7 @@
     <external-path
         name="files_root"
         path="Android/data/${applicationId}" />
-    <root-path name="root" path="." />
-    <files-path
-        name="files"
+    <external-path
+        name="external_files"
         path="." />
 </paths>
