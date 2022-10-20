@@ -48,7 +48,7 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
     private int acc = 0;
     private String address = "";
 
-    private String masterServerGetGeoLocationEndpoint =  "http" + Config.getSecureCharIfNeeded() + "://"  + Config.masterserver + "/api/getgeolocation";
+    private String masterServerGetGeoLocationEndpoint = "http" + Config.getSecureCharIfNeeded() + "://" + Config.masterserver + "/api/getgeolocation";
 
     private ProgressDialog progdlg_status;
 
@@ -96,15 +96,15 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
 
                         for (ScanResult scanResult : wifiList) {
                             JSONObject network = new JSONObject();
-                            network.put("macAddress",scanResult.BSSID.toUpperCase(Locale.ROOT).replace(":","-"));
-                            network.put("signalStrength",scanResult.level);
+                            network.put("macAddress", scanResult.BSSID.toUpperCase(Locale.ROOT).replace(":", "-"));
+                            network.put("signalStrength", scanResult.level);
                             wifiAPs.put(network);
                         }
 
                     }
 
                     JSONObject requestobj = new JSONObject();
-                    requestobj.put("wifiAccessPoints",wifiAPs);
+                    requestobj.put("wifiAccessPoints", wifiAPs);
 
 
                     System.out.println(requestobj.toString());
@@ -113,7 +113,7 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
                         progdlg_status.setMessage(getApplicationContext().getString(R.string.msg_searchposition_text_srvproc));
                     });
 
-                    if(Config.masterserver.equals("") || Config.masterserver == null) {
+                    if (Config.masterserver.equals("") || Config.masterserver == null) {
                         runOnUiThread(() -> {
                             AlertDialog.Builder dialog = new AlertDialog.Builder(NetworkPositionFinderActivity.this);
                             dialog.setTitle(getApplicationContext().getResources().getString(R.string.msg_nomasterserver_title))
@@ -131,68 +131,86 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
                     try {
 
                         //Get location using main api
-                        JSONObject locobj = new JSONObject(MainActivity.sendBodyOverHTTP(requestobj.toString(),masterServerGetGeoLocationEndpoint));
+                        JSONObject locobj = new JSONObject(MainActivity.sendBodyOverHTTP(requestobj.toString(), masterServerGetGeoLocationEndpoint));
 
                         acc = locobj.getInt("accuracy");
                         lat = locobj.getJSONObject("location").getDouble("lat");
                         lng = locobj.getJSONObject("location").getDouble("lng");
 
+                        if (acc == 0 && lat == 0.0 && lng == 0.0) {
+                            runOnUiThread(() -> {
+                                progdlg_status.dismiss();
+                                new AlertDialog.Builder(NetworkPositionFinderActivity.this)
+                                        .setTitle(R.string.msg_searchposition_nothingfound_title)
+                                        .setMessage(getString(R.string.msg_searchposition_nothingfound_text))
+                                        .setCancelable(false)
+                                        .setPositiveButton(R.string.btn_letsgo, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                finish();
+                                            }
+                                        }).show();
+                            });
+                        } else {
 
-                        runOnUiThread(() -> {
-                            progdlg_status.setMessage(getApplicationContext().getString(R.string.msg_searchposition_text_nominatim));
-                        });
+                            runOnUiThread(() -> {
+                                progdlg_status.setMessage(getApplicationContext().getString(R.string.msg_searchposition_text_nominatim));
+                            });
 
-                        //Get address using nominatim
-                        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://nominatim.openstreetmap.org/reverse").newBuilder();
-                        urlBuilder.addQueryParameter("lat", String.valueOf(lat));
-                        urlBuilder.addQueryParameter("lon", String.valueOf(lng));
-                        urlBuilder.addQueryParameter("format", "json");
-                        String url = urlBuilder.build().toString();
-                        Log.i("NetPosFind","Get Nominatim");
-                        Request request = new Request.Builder().url(url).build();
-                        OkHttpClient client = new OkHttpClient();
-                        try (Response response = client.newCall(request).execute()) {
-                            JSONObject responseobj = new JSONObject(response.body().string());
+                            //Get address using nominatim
+                            HttpUrl.Builder urlBuilder = HttpUrl.parse("https://nominatim.openstreetmap.org/reverse").newBuilder();
+                            urlBuilder.addQueryParameter("lat", String.valueOf(lat));
+                            urlBuilder.addQueryParameter("lon", String.valueOf(lng));
+                            urlBuilder.addQueryParameter("format", "json");
+                            String url = urlBuilder.build().toString();
+                            Log.i("NetPosFind", "Get Nominatim");
+                            Request request = new Request.Builder().url(url).build();
+                            OkHttpClient client = new OkHttpClient();
+                            try (Response response = client.newCall(request).execute()) {
+                                JSONObject responseobj = new JSONObject(response.body().string());
 
-                            address = responseobj.getString("display_name");
+                                address = responseobj.getString("display_name");
 
 
+                            } catch (Exception ex) {
+                                address = "Nominatim failed: " + ex.getMessage();
+                            }
 
-                        }catch(Exception ex){
-                            address = "Nominatim failed: " + ex.getMessage();
+
+                            runOnUiThread(() -> {
+                                lbl_address_val.setText(address);
+                                lbl_latitude.setText(String.format(getApplicationContext().getString(R.string.lbl_latitude_val), String.valueOf(lat)));
+                                lbl_longitude.setText(String.format(getApplicationContext().getString(R.string.lbl_longitude_val), String.valueOf(lng)));
+                                lbl_accuracy.setText(String.format(getApplicationContext().getString(R.string.lbl_accuracy_val), String.valueOf(acc)));
+                                progdlg_status.dismiss();
+                                btn_showonmap.setEnabled(true);
+                                btn_locatemebynetworks.setEnabled(true);
+                            });
+
+
                         }
 
+                    } catch (Exception ex) {
 
                         runOnUiThread(() -> {
-                            lbl_address_val.setText(address);
-                            lbl_latitude.setText(String.format(getApplicationContext().getString(R.string.lbl_latitude_val), String.valueOf(lat)));
-                            lbl_longitude.setText(String.format(getApplicationContext().getString(R.string.lbl_longitude_val),  String.valueOf(lng) ));
-                            lbl_accuracy.setText(String.format(getApplicationContext().getString(R.string.lbl_accuracy_val), String.valueOf(acc)));
-                            progdlg_status.dismiss();
-                            btn_showonmap.setEnabled(true);
-                            btn_locatemebynetworks.setEnabled(true);
+                            AlertDialog.Builder dialog = new AlertDialog.Builder(NetworkPositionFinderActivity.this);
+                            dialog.setTitle(getApplicationContext().getResources().getString(R.string.msg_error_title))
+                                    .setIcon(R.drawable.ic_baseline_location_on_24)
+                                    .setMessage(String.format(getApplicationContext().getResources().getString(R.string.msg_error_text), ex.getMessage()))
+                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialoginterface, int i) {
+                                            progdlg_status.dismiss();
+                                            btn_locatemebynetworks.setEnabled(true);
+                                            btn_showonmap.setEnabled(false);
+                                            btn_locatemebynetworks.setEnabled(true);
+                                            lat = 0.0;
+                                            lng = 0.0;
+                                            acc = 0;
+                                            address = "";
+                                        }
+                                    }).show();
+
                         });
-
-
-
-
-                    }catch(Exception ex){
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(NetworkPositionFinderActivity.this);
-                        dialog.setTitle(getApplicationContext().getResources().getString(R.string.msg_error_title))
-                                .setIcon(R.drawable.ic_baseline_location_on_24)
-                                .setMessage(String.format(getApplicationContext().getResources().getString(R.string.msg_error_text),ex.getMessage()))
-                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialoginterface, int i) {
-                                        progdlg_status.dismiss();
-                                        btn_locatemebynetworks.setEnabled(true);
-                                        btn_showonmap.setEnabled(false);
-                                        btn_locatemebynetworks.setEnabled(true);
-                                        lat = 0.0;
-                                        lng = 0.0;
-                                        acc = 0;
-                                        address = "";
-                                    }
-                                }).show();
                     }
 
 
@@ -205,7 +223,7 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
         try {
             registerReceiver(wifiScanReceiver,
                     new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -249,7 +267,6 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
         });
 
     }
-
 
 
 }
