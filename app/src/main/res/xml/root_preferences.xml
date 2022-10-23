@@ -47,6 +47,7 @@
             android:entries="@array/theme_titles"
             android:entryValues="@array/theme_values"
             android:title="@string/preferredtheme_text"
+            app:icon="@drawable/ic_baseline_brush_24"
             app:key="theme"
             app:summary="@string/preferredtheme_title" />
     </PreferenceCategory>
