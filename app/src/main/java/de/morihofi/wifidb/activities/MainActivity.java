@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
@@ -318,7 +319,21 @@ public class MainActivity extends AppCompatActivity {
         lbl_status_status = (TextView) findViewById(R.id.lbl_status_status);
         maposm = (MapView) findViewById(R.id.maposm);
 
-        if (preferences.getBoolean("useonlinemaptiles", true)) {
+        String theme = preferences.getString("theme", "system");
+        if (theme.equals("system")) {
+            //setTheme(android.R.style.Theme);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
+        if (theme.equals("light")) {
+            //setTheme(android.R.style.Theme_Light);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+        if (theme.equals("dark")) {
+            //setTheme(android.R.style.Theme_Black);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+
+            if (preferences.getBoolean("useonlinemaptiles", true)) {
 
             maposm.setVisibility(View.VISIBLE);
 
