@@ -162,33 +162,35 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*
-    public void InstallApp() {
-
-
-        //installtion permission
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if(!getPackageManager().canRequestPackageInstalls()){
-                startActivityForResult(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
-                        .setData(Uri.parse(String.format("package:%s", getPackageName()))), 1);
-            }
-        }
-
-    }
-    */
-
 
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        //Set theme
+        String theme = preferences.getString("theme", "system");
+        if (!theme.equals("system")) {
+            //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+
+            if (theme.equals("light") && AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_NO) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
+            if (theme.equals("dark") && AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        }
+
+        //Now set View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //Ignore android.os.NetworkOnMainThreadException
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
 
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
@@ -319,21 +321,10 @@ public class MainActivity extends AppCompatActivity {
         lbl_status_status = (TextView) findViewById(R.id.lbl_status_status);
         maposm = (MapView) findViewById(R.id.maposm);
 
-        String theme = preferences.getString("theme", "system");
-        if (theme.equals("system")) {
-            //setTheme(android.R.style.Theme);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        }
-        if (theme.equals("light")) {
-            //setTheme(android.R.style.Theme_Light);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
-        if (theme.equals("dark")) {
-            //setTheme(android.R.style.Theme_Black);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
 
-            if (preferences.getBoolean("useonlinemaptiles", true)) {
+
+
+        if (preferences.getBoolean("useonlinemaptiles", true)) {
 
             maposm.setVisibility(View.VISIBLE);
 
