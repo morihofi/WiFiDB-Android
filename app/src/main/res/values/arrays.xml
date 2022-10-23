@@ -9,4 +9,17 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <string-array name="theme_values">
+        <item>system</item>
+        <item>dark</item>
+        <item>light</item>
+    </string-array>
+
+    <string-array name="theme_titles">
+        <item>System</item>
+        <item>Dark</item>
+        <item>Light</item>
+    </string-array>
+
 </resources>

@@ -107,4 +107,10 @@
     <string name="msg_update_install_text">Bitte warten Sie einen Moment, wärend das Update installiert wird.</string>
     <string name="msg_update_uptodate_title">App ist aktuell</string>
     <string name="msg_update_uptodate_text">Sie haben die neuste Version bereits installiert.</string>
+    <string name="appearance_header">Erscheinungsbild</string>
+    <string name="msg_searchposition_nothingfound_text">Ihre aktuelle Position konnte anhand unserer aktuellen WLAN-Daten nicht ermittelt werden. Aber Sie können helfen, weitere Netzwerke zu finden.</string>
+    <string name="msg_searchposition_nothingfound_title">Position nicht gefunden</string>
+    <string name="btn_letsgo">Auf geht\'s</string>
+    <string name="preferredtheme_text">Bevorzugtes Thema</string>
+    <string name="preferredtheme_title">Sie können das Farbthema dieser App ändern. Die Änderungen werden nach dem Neustart der App übernommen.</string>
 </resources>

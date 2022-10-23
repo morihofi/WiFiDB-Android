@@ -121,6 +121,12 @@
     <string name="msg_update_install_text">Please wait while the update is installed.</string>
     <string name="msg_update_uptodate_title">App is up-to-date</string>
     <string name="msg_update_uptodate_text">You have the newest version already installed, so no update is needed!</string>
+    <string name="appearance_header">Appearance</string>
+    <string name="msg_searchposition_nothingfound_title">Position not found</string>
+    <string name="msg_searchposition_nothingfound_text">Your current position could not be determined using our current WiFi data. But you can help to find more networks.</string>
+    <string name="btn_letsgo">Let\'s go</string>
+    <string name="preferredtheme_text">Preferred Theme</string>
+    <string name="preferredtheme_title">You can set your color theme for this app. Please restart the app to apply this setting.</string>
 
 
 </resources>

@@ -33,6 +33,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import org.json.JSONObject;
@@ -277,7 +278,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-    void installAPK(String PATH,Context context) {
+    private void installAPK(String PATH,Context context) {
 
 
         File file = new File(PATH);
@@ -297,7 +298,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    Uri uriFromFile(Context context, File file) {
+    private Uri uriFromFile(Context context, File file) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
         } else {

@@ -40,10 +40,16 @@
             app:title="@string/offline_mode" />
 
 
-
-
-            </PreferenceCategory>
-
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/appearance_header">
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/theme_titles"
+            android:entryValues="@array/theme_values"
+            android:title="@string/preferredtheme_text"
+            app:key="theme"
+            app:summary="@string/preferredtheme_title" />
+    </PreferenceCategory>
 
 
 </PreferenceScreen>
