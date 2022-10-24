@@ -114,23 +114,9 @@ public class MainActivity extends AppCompatActivity {
             }
             return;
 
-            // other 'case' lines to check for other
-            // permissions this app might request
+
         }
     }
-/*
-    public static void runJavascriptOnWebView(WebView webview, String js) {
-        // before Kitkat, the only way to run javascript was to load a url that starts with "javascript:".
-        // Starting in Kitkat, the "javascript:" method still works, but it expects the rest of the string
-        // to be URL encoded, unlike previous versions. Rather than URL encode for Kitkat and above,
-        // use the new evaluateJavascript method.
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            webview.loadUrl("javascript:" + js);
-        } else {
-            webview.evaluateJavascript(js, null);
-        }
-    }
-*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -370,10 +356,6 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
 
-
-
-        //webview.getSettings().setJavaScriptEnabled(true);
-        //webview.loadUrl("file:///android_asset/status.html");
 
         updateofflinerecordsnumber();
 
@@ -848,10 +830,6 @@ public class MainActivity extends AppCompatActivity {
             dialog.setTitle(title)
                     .setIcon(R.drawable.ic_wifi)
                     .setMessage(message)
-//     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//      public void onClick(DialogInterface dialoginterface, int i) {
-//          dialoginterface.cancel();
-//          }})
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialoginterface, int i) {
                         }
