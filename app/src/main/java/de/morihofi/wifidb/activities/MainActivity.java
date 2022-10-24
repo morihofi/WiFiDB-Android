@@ -474,14 +474,7 @@ public class MainActivity extends AppCompatActivity {
                 btnstart.setEnabled(false);
                 btnstop.setEnabled(true);
 
-                Intent serviceIntent = new Intent(v.getContext(), WiFiCollectorService.class);
-                serviceIntent.putExtra("action", "start");
-                serviceIntent.putExtra("offlinemode", preferences.getBoolean("offline_mode", true));
-                serviceIntent.putExtra("rescan_interval", preferences.getString("general_rescan_interval", "15"));
-                serviceIntent.putExtra("contributor", preferences.getString("general_contributorname", ""));
-
-
-                startService(serviceIntent);
+                startWifiCollectingService(v.getContext(),preferences);
 
                 // \n is for new line
                 //  Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
@@ -669,6 +662,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public static void startWifiCollectingService(Context context,SharedPreferences prefs) {
+        Intent serviceIntent = new Intent(context, WiFiCollectorService.class);
+        serviceIntent.putExtra("action", "start");
+        serviceIntent.putExtra("offlinemode", prefs.getBoolean("offline_mode", true));
+        serviceIntent.putExtra("rescan_interval", prefs.getString("general_rescan_interval", "15"));
+        serviceIntent.putExtra("contributor", prefs.getString("general_contributorname", ""));
+
+
+        context.startService(serviceIntent);
     }
 
     static void killApp() {

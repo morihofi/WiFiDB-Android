@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- needed for autostart -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".App"
@@ -23,6 +25,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WifiDB"
         android:usesCleartextTraffic="true">
+
+        <!-- needed for autostart -->
+        <receiver android:enabled="true" android:name=".receivers.BootUpReceiver"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+
+
         <activity
             android:name=".activities.NetworkPositionFinderActivity"
             android:exported="false" />

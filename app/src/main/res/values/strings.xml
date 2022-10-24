@@ -129,6 +129,8 @@
     <string name="preferredtheme_title">You can set your color theme for this app. Please restart the app to apply this setting.</string>
     <string name="sslsetting_title">SSL/TLS Connection</string>
     <string name="sslsetting_text">Change the SSL/TLS settings, if you encounter problems or disable it completely (not recommended). Note: This setting has no effect if you are using Android 4.x. A restart of the app is required to apply the settings.</string>
+    <string name="autostart_title">Start Service on Boot</string>
+    <string name="autostart_text">Start the WifiDB collection service automatically when the device boots up.</string>
 
 
 </resources>
