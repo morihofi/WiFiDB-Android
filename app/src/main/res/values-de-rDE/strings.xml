@@ -117,4 +117,5 @@
     <string name="sslsetting_text">Ändern Sie die SSL/TLS-Einstellungen, wenn Sie auf Probleme stoßen, oder deaktivieren Sie sie vollständig (nicht empfohlen). Hinweis: Diese Einstellung hat keine Auswirkung, wenn Sie Android 4.x verwenden. Die Änderungen werden nach einem Neustart der App übernommen.</string>
     <string name="autostart_title">Beim Systemstart den Dienst starten</string>
     <string name="autostart_text">Startet den WlanDB Sammeldienst automatisch wenn das Gerät gestartet wurde</string>
+    <string name="advancedoptions_header">Erweitert</string>
 </resources>

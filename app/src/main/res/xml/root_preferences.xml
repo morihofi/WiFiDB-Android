@@ -27,6 +27,11 @@
             app:key="useonlinemaptiles"
             app:summary="@string/useonlinetiles_desc"
             app:title="@string/useonlinetiles_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/advancedoptions_header">
+
         <ListPreference
             android:defaultValue="1"
             android:entries="@array/sslsetting_titles"
@@ -41,9 +46,7 @@
             android:title="@string/autostart_title"
             app:icon="@drawable/ic_baseline_android_24"
             app:summary="@string/autostart_text" />
-
     </PreferenceCategory>
-
     <PreferenceCategory app:title="@string/offline_header">
 
         <SwitchPreferenceCompat
