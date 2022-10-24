@@ -27,6 +27,14 @@
             app:key="useonlinemaptiles"
             app:summary="@string/useonlinetiles_desc"
             app:title="@string/useonlinetiles_title" />
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/sslsetting_titles"
+            android:entryValues="@array/sslsetting_values"
+            android:key="sslsetting"
+            android:title="@string/sslsetting_title"
+            app:icon="@drawable/ic_baseline_vpn_lock_24"
+            app:summary="@string/sslsetting_text" />
 
     </PreferenceCategory>
 

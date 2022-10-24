@@ -177,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
 
-
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
             int version = pInfo.versionCode;
@@ -308,8 +307,6 @@ public class MainActivity extends AppCompatActivity {
         maposm = (MapView) findViewById(R.id.maposm);
 
 
-
-
         if (preferences.getBoolean("useonlinemaptiles", true)) {
 
             maposm.setVisibility(View.VISIBLE);
@@ -338,10 +335,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE},
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                 1);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if(!getPackageManager().canRequestPackageInstalls()){
+            if (!getPackageManager().canRequestPackageInstalls()) {
                 startActivityForResult(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
                         .setData(Uri.parse(String.format("package:%s", getPackageName()))), 1);
             }
@@ -349,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
         //Storage Permission
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -652,7 +649,6 @@ public class MainActivity extends AppCompatActivity {
                                 }
 
 
-
                                 progdlg_upload.dismiss();
 
                                 runOnUiThread(() -> {
@@ -771,7 +767,22 @@ public class MainActivity extends AppCompatActivity {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                         Config.masterserver_usetls = false;
                     } else {
-                        Config.masterserver_usetls = Config.getMasterserverTLS();
+
+                        String sslsetting = preferences.getString("sslsetting", "ssl"); //none, ssl-noverify, ssl
+
+                        //Only if SSL is enabled
+                        if (sslsetting.equals("ssl") || sslsetting.equals("ssl-noverify")) {
+                            Config.masterserver_usetls = Config.getMasterserverTLS();
+                        } else {
+                            Config.masterserver_usetls = false;
+                        }
+
+
+                        if (sslsetting.equals("ssl-noverify")) {
+                            //Check if certificate errors are ignored
+                            Tools.acceptAllCertificates();
+                        }
+
                     }
 
                     System.out.println("Get minimum App Service Version...");

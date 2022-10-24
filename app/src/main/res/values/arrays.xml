@@ -22,4 +22,17 @@
         <item>Light</item>
     </string-array>
 
+
+    <string-array name="sslsetting_values">
+        <item>ssl</item>
+        <item>ssl-noverify</item>
+        <item>none</item>
+    </string-array>
+
+    <string-array name="sslsetting_titles">
+        <item>Default SSL/TLS</item>
+        <item>SSL/TLS (No verify)</item>
+        <item>Unencrypted (HTTP)</item>
+    </string-array>
+
 </resources>

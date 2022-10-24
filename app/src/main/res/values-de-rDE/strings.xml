@@ -113,4 +113,6 @@
     <string name="btn_letsgo">Auf geht\'s</string>
     <string name="preferredtheme_text">Bevorzugtes Thema</string>
     <string name="preferredtheme_title">Sie können das Farbthema dieser App ändern. Die Änderungen werden nach dem Neustart der App übernommen.</string>
+    <string name="sslsetting_title">SSL/TLS Verbindung</string>
+    <string name="sslsetting_text">Ändern Sie die SSL/TLS-Einstellungen, wenn Sie auf Probleme stoßen, oder deaktivieren Sie sie vollständig (nicht empfohlen). Hinweis: Diese Einstellung hat keine Auswirkung, wenn Sie Android 4.x verwenden. Die Änderungen werden nach einem Neustart der App übernommen.</string>
 </resources>
