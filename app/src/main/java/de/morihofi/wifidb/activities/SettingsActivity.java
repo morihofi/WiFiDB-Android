@@ -150,7 +150,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                             Log.i("Settings", "Server is available");
                             String updateurl = o.getString("downloadurl");
-                            filename = getExternalStorageDirectory().toString() + File.separator + BuildConfig.APPLICATION_ID + ".apk";
+                            filename = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + File.separator + BuildConfig.APPLICATION_ID + ".apk";
 
                             File filenameFile = new File(filename);
                             if (filenameFile.exists()) {
