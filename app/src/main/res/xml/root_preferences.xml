@@ -40,7 +40,7 @@
             android:title="@string/sslsetting_title"
             app:icon="@drawable/ic_baseline_vpn_lock_24"
             app:summary="@string/sslsetting_text" />
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="autostart"
             android:title="@string/autostart_title"
