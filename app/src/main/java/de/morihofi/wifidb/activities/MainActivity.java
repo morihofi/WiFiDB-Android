@@ -57,9 +57,9 @@ import java.util.concurrent.TimeUnit;
 
 import de.morihofi.wifidb.Config;
 import de.morihofi.wifidb.R;
-import de.morihofi.wifidb.Tools;
-import de.morihofi.wifidb.libfile;
-import de.morihofi.wifidb.libgeo;
+import de.morihofi.wifidb.utils.Tools;
+import de.morihofi.wifidb.utils.libfile;
+import de.morihofi.wifidb.utils.libgeo;
 import de.morihofi.wifidb.services.WiFiCollectorService;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;

@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.Locale;
 
 import de.morihofi.wifidb.R;
-import de.morihofi.wifidb.libfile;
+import de.morihofi.wifidb.utils.libfile;
 
 public class PreviousScansActivity extends AppCompatActivity {
     ListView lvpreviousscans;

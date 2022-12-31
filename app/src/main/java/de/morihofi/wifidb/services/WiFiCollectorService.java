@@ -35,7 +35,7 @@ import java.util.List;
 import de.morihofi.wifidb.Config;
 import de.morihofi.wifidb.activities.MainActivity;
 import de.morihofi.wifidb.R;
-import de.morihofi.wifidb.libfile;
+import de.morihofi.wifidb.utils.libfile;
 
 public class WiFiCollectorService extends Service implements LocationListener {
 

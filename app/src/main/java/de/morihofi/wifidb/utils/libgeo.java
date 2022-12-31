@@ -1,4 +1,4 @@
-package de.morihofi.wifidb;
+package de.morihofi.wifidb.utils;
 
 import java.util.HashMap;
 

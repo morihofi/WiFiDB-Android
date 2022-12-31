@@ -1,4 +1,4 @@
-package de.morihofi.wifidb;
+package de.morihofi.wifidb.utils;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
