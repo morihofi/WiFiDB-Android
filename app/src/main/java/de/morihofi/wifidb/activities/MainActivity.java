@@ -20,6 +20,7 @@ import android.os.PowerManager;
 import android.os.Process;
 import android.os.StrictMode;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -212,12 +213,12 @@ public class MainActivity extends AppCompatActivity {
 
 
             if (pm.isIgnoringBatteryOptimizations(packageName)) {
-                System.out.println("App ignores Battery optimations");
+                System.out.println("App ignores Battery optimizations");
                 //   intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
 
 
             } else {
-                System.out.println("App does not ignore Battery optimations");
+                System.out.println("App does not ignore Battery optimizations");
                 //   intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                 //   intent.setData(Uri.parse("package:" + packageName));
 
@@ -354,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        updateofflinerecordsnumber();
+        updateOfflineRecordsNumber();
 
         InitializeServerVariables();
 
@@ -372,16 +373,16 @@ public class MainActivity extends AppCompatActivity {
                     //Toast.makeText(context, , Toast.LENGTH_LONG).show();
                     int wifi_networks = intent.getIntExtra("wifis", -1);
                     String gps_state = intent.getStringExtra("gps_state");
-                    String wsstate = intent.getStringExtra("wsstate");
-                    Double loc_lat = intent.getDoubleExtra("gps_lat", 0);
-                    Double loc_lon = intent.getDoubleExtra("gps_lon", 0);
+                    String wsState = intent.getStringExtra("wsstate");
+                    Double locLat = intent.getDoubleExtra("gps_lat", 0);
+                    Double locLon = intent.getDoubleExtra("gps_lon", 0);
                     Boolean is_scan_running = intent.getBooleanExtra("is_scan_running", false);
                     int rescan_interval = intent.getIntExtra("rescan_interval", -1);
-                    Boolean stopflag = intent.getBooleanExtra("stopflag", false);
-                    Boolean offlinemode = intent.getBooleanExtra("offlinemode", true);
+                    Boolean stopFlag = intent.getBooleanExtra("stopflag", false);
+                    Boolean offlineMode = intent.getBooleanExtra("offlinemode", true);
                     int gps_acc = intent.getIntExtra("gps_radius", 0);
 
-                    if (stopflag) {
+                    if (stopFlag) {
                         btnstart.setEnabled(true);
                         btnstop.setEnabled(false);
 
@@ -409,12 +410,12 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             lbl_status_gpsacc.setText(gps_acc + " m");
                             //runJavascriptOnWebView(webview, "updateValue(\"val_gps\", \"" + libgeo.CoordinateString(loc_lat, loc_lon).replace("\"","\\" + "\"") + "\")");
-                            lbl_status_coordinates.setText(libgeo.CoordinateString(loc_lat, loc_lon));
+                            lbl_status_coordinates.setText(libgeo.CoordinateString(locLat, locLon));
 
                             if (preferences.getBoolean("useonlinemaptiles", true)) {
                                 IMapController mapController = maposm.getController();
                                 //mapController.setZoom(14.0);
-                                GeoPoint startPoint = new GeoPoint(loc_lat, loc_lon);
+                                GeoPoint startPoint = new GeoPoint(locLat, locLon);
                                 mapController.setCenter(startPoint);
 
                                 maposm.getOverlays().clear();
@@ -427,10 +428,10 @@ public class MainActivity extends AppCompatActivity {
 
                         }
 
-                        if (wsstate.equals("disconnected")) {
+                        if (wsState.equals("disconnected")) {
 
 
-                            if (offlinemode) {
+                            if (offlineMode) {
                                 //runJavascriptOnWebView(webview, "updateValue(\"val_status\", \"" + getApplicationContext().getResources().getString(R.string.status_offlinewifirecording) + "\")");
                                 lbl_status_status.setText(getApplicationContext().getResources().getString(R.string.status_offlinewifirecording));
                             } else {
@@ -513,7 +514,7 @@ public class MainActivity extends AppCompatActivity {
 
         lblofflinerecords.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                updateofflinerecordsnumber();
+                updateOfflineRecordsNumber();
             }
         });
 
@@ -646,7 +647,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 runOnUiThread(() -> {
                                     btnuploadofflinerecs.setEnabled(true);
-                                    updateofflinerecordsnumber();
+                                    updateOfflineRecordsNumber();
                                 });
 
 
@@ -657,6 +658,7 @@ public class MainActivity extends AppCompatActivity {
 
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Log.e("UploadScans",e.getMessage());
                     }
                 }).start();
             }
@@ -694,52 +696,49 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL); // Progress Dialog Style Horizontal
             progressDialog.show(); // Display Progress Dialog
             progressDialog.setCancelable(false);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+            new Thread(() -> {
 
-                    try {
-                        String orgcontent = libfile.readFromFile(getApplicationContext(), "records.json", false);
-                        JSONArray orgcontentobj;
+                try {
+                    String orgContent = libfile.readFromFile(getApplicationContext(), "records.json", false);
+                    JSONArray orgContentObj;
 
-                        if (orgcontent == null) {
-                            orgcontentobj = new JSONArray();
-                        } else {
-                            try {
-                                orgcontentobj = new JSONArray(orgcontent);
-                            } catch (JSONException e) {
-                                orgcontentobj = new JSONArray();
-                            }
+                    if (orgContent == null) {
+                        orgContentObj = new JSONArray();
+                    } else {
+                        try {
+                            orgContentObj = new JSONArray(orgContent);
+                        } catch (JSONException e) {
+                            orgContentObj = new JSONArray();
                         }
-                        progressDialog.setMax(orgcontentobj.length()); // Progress Dialog Max Value
-
-                        int i = 0;
-                        while (true) {
-
-                            progressDialog.setProgress(i);
-
-                            libfile.appendToFile(getApplicationContext(), "records.jsonl", orgcontentobj.get(i).toString(), false);
-
-                            i++;
-                            if (orgcontentobj.length() == i) {
-                                break;
-                            }
-
-                        }
-
-                        progressDialog.dismiss();
-
-                        final int i_migrated = i;
-                        if (i_migrated != 0) {
-                            runOnUiThread(() -> Toast.makeText(MainActivity.this, String.format(getApplicationContext().getResources().getString(R.string.toast_x_records_migrated), i_migrated), Toast.LENGTH_LONG).show());
-                        }
-
-                        libfile.deleteFile(getApplicationContext(), "records.json");
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                    progressDialog.setMax(orgContentObj.length()); // Progress Dialog Max Value
+
+                    int i = 0;
+                    while (true) {
+
+                        progressDialog.setProgress(i);
+
+                        libfile.appendToFile(getApplicationContext(), "records.jsonl", orgContentObj.get(i).toString(), false);
+
+                        i++;
+                        if (orgContentObj.length() == i) {
+                            break;
+                        }
+
+                    }
+
+                    progressDialog.dismiss();
+
+                    final int i_migrated = i;
+                    if (i_migrated != 0) {
+                        runOnUiThread(() -> Toast.makeText(MainActivity.this, String.format(getApplicationContext().getResources().getString(R.string.toast_x_records_migrated), i_migrated), Toast.LENGTH_LONG).show());
+                    }
+
+                    libfile.deleteFile(getApplicationContext(), "records.json");
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }).start();
 
@@ -772,17 +771,17 @@ public class MainActivity extends AppCompatActivity {
                         Config.masterserver_usetls = false;
                     } else {
 
-                        String sslsetting = preferences.getString("sslsetting", "ssl"); //none, ssl-noverify, ssl
+                        String sslSetting = preferences.getString("sslsetting", "ssl"); //none, ssl-noverify, ssl
 
                         //Only if SSL is enabled
-                        if (sslsetting.equals("ssl") || sslsetting.equals("ssl-noverify")) {
+                        if (sslSetting.equals("ssl") || sslSetting.equals("ssl-noverify")) {
                             Config.masterserver_usetls = Config.getMasterserverTLS();
                         } else {
                             Config.masterserver_usetls = false;
                         }
 
 
-                        if (sslsetting.equals("ssl-noverify")) {
+                        if (sslSetting.equals("ssl-noverify")) {
                             //Check if certificate errors are ignored
                             Tools.acceptAllCertificates();
                         }
@@ -803,7 +802,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void updateofflinerecordsnumber() {
+    private void updateOfflineRecordsNumber() {
 
         ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(MainActivity.this);
