@@ -63,33 +63,33 @@ public class PreviousScansActivity extends AppCompatActivity {
 
     private void reloadPreviousScansList(ArrayAdapter adapter) {
         scans.clear();
-        JSONArray jsonarr = null;
+        JSONArray jsonArr = null;
         try {
             System.out.println(libfile.readFromFile(getApplicationContext(), "scans.json", false));
 
-            jsonarr = new JSONArray(libfile.readFromFile(getApplicationContext(), "scans.json", false));
+            jsonArr = new JSONArray(libfile.readFromFile(getApplicationContext(), "scans.json", false));
 
 
         } catch (Exception e) {
             e.printStackTrace();
-            jsonarr = new JSONArray();
+            jsonArr = new JSONArray();
         }
 
 
-        for (int i=0; i < jsonarr.length(); i++) {
+        for (int i=0; i < jsonArr.length(); i++) {
             try {
 
 
-                JSONObject jsonobj = jsonarr.getJSONObject(i);
+                JSONObject jsonObj = jsonArr.getJSONObject(i);
 
-                Long time = jsonobj.getLong("time");
-                String scanid =jsonobj.getString("scanid");
+                Long time = jsonObj.getLong("time");
+                String scanId =jsonObj.getString("scanid");
 
                 Locale locale = Locale.getDefault();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
                 String date = dateFormat.format(new Date((long)time*1000));
 
-                scans.add(scanid + " (" + date + ")");
+                scans.add(scanId + " (" + date + ")");
             } catch (JSONException e) {
                 e.printStackTrace();
             }

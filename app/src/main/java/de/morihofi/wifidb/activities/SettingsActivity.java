@@ -68,12 +68,12 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         Bundle b = getIntent().getExtras();
-        boolean forceupdate = false; // or other values
+        boolean forceUpdate = false; // or other values
         if(b != null) {
-            forceupdate = b.getBoolean("forceupdate");
+            forceUpdate = b.getBoolean("forceupdate");
         }
 
-        if(!forceupdate){
+        if(!forceUpdate){
             //Normal open
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
@@ -110,22 +110,22 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void checkForUpdates(Context context, Runnable doAfter){
-        ProgressDialog progdlg = new ProgressDialog(context);
+        ProgressDialog progressDialog = new ProgressDialog(context);
         OkHttpClient client = new OkHttpClient();
-        progdlg.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL); // Progress Dialog Style
-        progdlg.setMax(100);
-        progdlg.setCancelable(false);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL); // Progress Dialog Style
+        progressDialog.setMax(100);
+        progressDialog.setCancelable(false);
 
-        ProgressDialog updatesearchdlg = new ProgressDialog(context);
-        updatesearchdlg.setMessage(context.getApplicationContext().getResources().getString(R.string.msg_searchforupdates_text)); // Setting Message
-        updatesearchdlg.setTitle(R.string.msg_searchforupdates_title); // Setting Title
-        updatesearchdlg.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style
-        updatesearchdlg.setMax(100);
-        updatesearchdlg.setCancelable(false);
-        updatesearchdlg.show();
+        ProgressDialog updateSearchProgressDialog = new ProgressDialog(context);
+        updateSearchProgressDialog.setMessage(context.getApplicationContext().getResources().getString(R.string.msg_searchforupdates_text)); // Setting Message
+        updateSearchProgressDialog.setTitle(R.string.msg_searchforupdates_title); // Setting Title
+        updateSearchProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style
+        updateSearchProgressDialog.setMax(100);
+        updateSearchProgressDialog.setCancelable(false);
+        updateSearchProgressDialog.show();
 
 
-        Thread updaterthread = new Thread() {
+        Thread updaterThread = new Thread() {
             @Override
             public void run() {
                 String filename;
@@ -137,7 +137,7 @@ public class SettingsActivity extends AppCompatActivity {
                     JSONObject o = new JSONObject(response.body().string());
 
                     runOnUiThread(() -> {
-                        updatesearchdlg.dismiss();
+                        updateSearchProgressDialog.dismiss();
 
                     });
 
@@ -158,10 +158,10 @@ public class SettingsActivity extends AppCompatActivity {
                             }
 
                             runOnUiThread(() -> {
-                                progdlg.setIcon(R.drawable.ic_baseline_browser_updated_24);
-                                progdlg.setTitle(R.string.msg_update_downloading_title);
-                                progdlg.setMessage(context.getString(R.string.msg_update_downloading_text));
-                                progdlg.show(); // Display Progress Dialog
+                                progressDialog.setIcon(R.drawable.ic_baseline_browser_updated_24);
+                                progressDialog.setTitle(R.string.msg_update_downloading_title);
+                                progressDialog.setMessage(context.getString(R.string.msg_update_downloading_text));
+                                progressDialog.show(); // Display Progress Dialog
                             });
 
                             try {
@@ -185,7 +185,7 @@ public class SettingsActivity extends AppCompatActivity {
                                     final int currentProgress = (int) ((((double) downloadedFileSize) / ((double) completeFileSize)) * 100000d);
 
                                     runOnUiThread(() -> {
-                                        progdlg.setProgress(currentProgress);
+                                        progressDialog.setProgress(currentProgress);
                                     });
 
                                     bout.write(data, 0, x);
@@ -205,7 +205,7 @@ public class SettingsActivity extends AppCompatActivity {
                                                 }
                                             });
                                     doAfter.run();
-                                    progdlg.dismiss();
+                                    progressDialog.dismiss();
                                     alertDialog.show();
                                 });
                             }
@@ -234,7 +234,7 @@ public class SettingsActivity extends AppCompatActivity {
                                             }
                                         });
                                 doAfter.run();
-                                progdlg.dismiss();
+                                progressDialog.dismiss();
                                 alertDialog.show();
                             });
                         }
@@ -256,7 +256,7 @@ public class SettingsActivity extends AppCompatActivity {
                                         }
                                     });
                             doAfter.run();
-                            progdlg.dismiss();
+                            progressDialog.dismiss();
                             alertDialog.show();
                         });
 
@@ -269,11 +269,11 @@ public class SettingsActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> {
                     doAfter.run();
-                    progdlg.dismiss();
+                    progressDialog.dismiss();
                 });
             }
         };
-        updaterthread.start();
+        updaterThread.start();
 
 
     }

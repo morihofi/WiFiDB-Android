@@ -103,11 +103,11 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
 
                     }
 
-                    JSONObject requestobj = new JSONObject();
-                    requestobj.put("wifiAccessPoints", wifiAPs);
+                    JSONObject requestObj = new JSONObject();
+                    requestObj.put("wifiAccessPoints", wifiAPs);
 
 
-                    System.out.println(requestobj.toString());
+                    System.out.println(requestObj.toString());
 
                     runOnUiThread(() -> {
                         progdlg_status.setMessage(getApplicationContext().getString(R.string.msg_searchposition_text_srvproc));
@@ -131,11 +131,11 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
                     try {
 
                         //Get location using main api
-                        JSONObject locobj = new JSONObject(MainActivity.sendBodyOverHTTP(requestobj.toString(), masterServerGetGeoLocationEndpoint));
+                        JSONObject locObj = new JSONObject(MainActivity.sendBodyOverHTTP(requestObj.toString(), masterServerGetGeoLocationEndpoint));
 
-                        acc = locobj.getInt("accuracy");
-                        lat = locobj.getJSONObject("location").getDouble("lat");
-                        lng = locobj.getJSONObject("location").getDouble("lng");
+                        acc = locObj.getInt("accuracy");
+                        lat = locObj.getJSONObject("location").getDouble("lat");
+                        lng = locObj.getJSONObject("location").getDouble("lng");
 
                         if (acc == 0 && lat == 0.0 && lng == 0.0) {
                             runOnUiThread(() -> {
@@ -167,9 +167,9 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
                             Request request = new Request.Builder().url(url).build();
                             OkHttpClient client = new OkHttpClient();
                             try (Response response = client.newCall(request).execute()) {
-                                JSONObject responseobj = new JSONObject(response.body().string());
+                                JSONObject responseObj = new JSONObject(response.body().string());
 
-                                address = responseobj.getString("display_name");
+                                address = responseObj.getString("display_name");
 
 
                             } catch (Exception ex) {
@@ -228,42 +228,38 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
         }
 
 
-        btn_locatemebynetworks.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+        btn_locatemebynetworks.setOnClickListener(v -> {
 
-                btn_showonmap.setEnabled(false);
-                btn_locatemebynetworks.setEnabled(false);
-                progdlg_status.setMax(100);
-                progdlg_status.setTitle(getApplicationContext().getString(R.string.msg_searchposition_title));
-                progdlg_status.setMessage(getApplicationContext().getString(R.string.msg_searchposition_text_scanwifi));
-                progdlg_status.setCancelable(false);
-                progdlg_status.show();
+            btn_showonmap.setEnabled(false);
+            btn_locatemebynetworks.setEnabled(false);
+            progdlg_status.setMax(100);
+            progdlg_status.setTitle(getApplicationContext().getString(R.string.msg_searchposition_title));
+            progdlg_status.setMessage(getApplicationContext().getString(R.string.msg_searchposition_text_scanwifi));
+            progdlg_status.setCancelable(false);
+            progdlg_status.show();
 
 
-                wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                if (!wifiManager.isWifiEnabled()) {
-                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.toast_turning_wifi_on), Toast.LENGTH_LONG).show();
-                    wifiManager.setWifiEnabled(true);
-                }
+            wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (!wifiManager.isWifiEnabled()) {
+                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.toast_turning_wifi_on), Toast.LENGTH_LONG).show();
+                wifiManager.setWifiEnabled(true);
+            }
 
-                if (ActivityCompat.checkSelfPermission(NetworkPositionFinderActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(
-                            NetworkPositionFinderActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
-                } else {
+            if (ActivityCompat.checkSelfPermission(NetworkPositionFinderActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        NetworkPositionFinderActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
+            } else {
 
-                    wifiManager.startScan();
-                }
+                wifiManager.startScan();
             }
         });
 
 
-        btn_showonmap.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String uri = String.format(Locale.ENGLISH, "geo:%f,%f", lat, lng);
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                NetworkPositionFinderActivity.this.startActivity(intent);
+        btn_showonmap.setOnClickListener(v -> {
+            String uri = String.format(Locale.ENGLISH, "geo:%f,%f", lat, lng);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            NetworkPositionFinderActivity.this.startActivity(intent);
 
-            }
         });
 
     }

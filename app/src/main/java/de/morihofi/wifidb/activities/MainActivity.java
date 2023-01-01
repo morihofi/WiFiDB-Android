@@ -592,13 +592,13 @@ public class MainActivity extends AppCompatActivity {
 
 
                                     File path = getApplicationContext().getFilesDir();
-                                    File recordsfile = new File(path, "records.jsonl");
+                                    File recordsFile = new File(path, "records.jsonl");
                                     try {
 
                                         RequestBody formBody = new MultipartBody.Builder()
                                                 .setType(MultipartBody.FORM)
-                                                .addFormDataPart("file", recordsfile.getName(),
-                                                        RequestBody.create(MediaType.parse("text/plain"), recordsfile))
+                                                .addFormDataPart("file", recordsFile.getName(),
+                                                        RequestBody.create(MediaType.parse("text/plain"), recordsFile))
                                                 .build();
                                         Request request = new Request.Builder()
                                                 .url(WiFiCollectorService.masterserver_restJSONL)
@@ -612,14 +612,14 @@ public class MainActivity extends AppCompatActivity {
                                             throw new Exception("Response code " + response.code() + " (" + Tools.getHTTPMessageFromStatusCode(response.code()) + ")");
                                         } else {
 
-                                            JSONObject responsejson = new JSONObject(response.body().string());
+                                            JSONObject responseJson = new JSONObject(response.body().string());
 
-                                            String scanid = responsejson.getString("scanid");
+                                            String scanId = responseJson.getString("scanid");
 
-                                            recordsfile.delete();
-                                            libfile.addScanID(getApplicationContext(), scanid);
+                                            recordsFile.delete();
+                                            libfile.addScanID(getApplicationContext(), scanId);
                                             runOnUiThread(() -> {
-                                                showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_text) + "\n\nScanID: " + scanid, getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_title));
+                                                showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_text) + "\n\nScanID: " + scanId, getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_title));
                                             });
                                         }
 
