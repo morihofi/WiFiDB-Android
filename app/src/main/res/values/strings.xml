@@ -86,7 +86,7 @@
     <string name="box_hdr_gpsaccuracy">GPS Accuracy</string>
     <string name="box_hdr_rescaninterval">Rescan Interval</string>
     <string name="box_hdr_coordinates">Coordinates</string>
-    <string name="status_na" translatable="false">N/A</string>
+    <string name="status_na">N/A</string>
     <string name="box_hdr_status">Status</string>
     <string name="useonlinetiles_title">Enable Online Map Tiles</string>
     <string name="useonlinetiles_desc">Enables the map function on the main screen of this app. A restart of this app may be required.</string>
@@ -132,6 +132,9 @@
     <string name="autostart_title">Start Service on Boot (Autostart)</string>
     <string name="autostart_text">Start the WifiDB collection service automatically when the device boots up.</string>
     <string name="advancedoptions_header">Advanced</string>
+    <string name="settings_encryption_default_ssltls">SSL/TLS (Default)</string>
+    <string name="settings_encryption_noverify">SSL/TLS No Verify</string>
+    <string name="settings_encryption_unencrypted">Unencypted (not recommended)</string>
 
 
 </resources>

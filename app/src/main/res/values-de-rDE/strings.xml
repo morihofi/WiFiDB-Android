@@ -118,4 +118,8 @@
     <string name="autostart_title">Beim Systemstart den Dienst starten (Autostart)</string>
     <string name="autostart_text">Startet den WlanDB Sammeldienst automatisch wenn das Gerät gestartet wurde</string>
     <string name="advancedoptions_header">Erweitert</string>
+    <string name="settings_encryption_default_ssltls">SSL/TLS (Standard)</string>
+    <string name="settings_encryption_noverify">SSL/TLS Ohne Gültigkeitsüberprüfung</string>
+    <string name="settings_encryption_unencrypted">Unverschlüsselt (nicht empfohlen)</string>
+    <string name="status_na" translatable="false">n.v.</string>
 </resources>
