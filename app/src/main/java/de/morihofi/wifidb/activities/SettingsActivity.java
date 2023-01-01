@@ -149,7 +149,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
                             Log.i("Settings", "Server is available");
-                            String updateurl = o.getString("downloadurl");
+                            String updateUrl = o.getString("downloadurl");
                             filename = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + File.separator + BuildConfig.APPLICATION_ID + ".apk";
 
                             File filenameFile = new File(filename);
@@ -167,7 +167,7 @@ public class SettingsActivity extends AppCompatActivity {
                             try {
                                 Log.i("Settings", "Downloading Update");
 
-                                URL url = new URL(updateurl);
+                                URL url = new URL(updateUrl);
                                 HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
                                 long completeFileSize = httpConnection.getContentLength();
 
