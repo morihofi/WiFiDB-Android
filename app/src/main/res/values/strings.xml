@@ -134,7 +134,7 @@
     <string name="advancedoptions_header">Advanced</string>
     <string name="settings_encryption_default_ssltls">SSL/TLS (Default)</string>
     <string name="settings_encryption_noverify">SSL/TLS No Verify</string>
-    <string name="settings_encryption_unencrypted">Unencypted (not recommended)</string>
+    <string name="settings_encryption_unencrypted">Unencrypted (not recommended)</string>
 
 
 </resources>
