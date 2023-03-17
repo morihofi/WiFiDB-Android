@@ -1,6 +1,7 @@
 # WiFiDB
 This is the official client app of my personal WiFiDB Project. Currently available in english and german.
-The WiFiDB app has the ability to force an update, if the server has dropped an API
+The WiFiDB app has the ability to force an update, if the server has dropped an API. This is done by checking
+the minimum accepted version code with the version code of my api.
 
 ## Compatibility
 Android 4.1 and up
