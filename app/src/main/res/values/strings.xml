@@ -135,6 +135,7 @@
     <string name="settings_encryption_default_ssltls">SSL/TLS (Default)</string>
     <string name="settings_encryption_noverify">SSL/TLS No Verify</string>
     <string name="settings_encryption_unencrypted">Unencrypted (not recommended)</string>
+    <string name="men_reloadmasterserver">Reload Masterserver settings</string>
 
 
 </resources>

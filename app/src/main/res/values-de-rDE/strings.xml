@@ -122,4 +122,5 @@
     <string name="settings_encryption_noverify">SSL/TLS Ohne Gültigkeitsüberprüfung</string>
     <string name="settings_encryption_unencrypted">Unverschlüsselt (nicht empfohlen)</string>
     <string name="status_na" translatable="false">n.v.</string>
+    <string name="men_reloadmasterserver">Masterserver Einst. auffrischen</string>
 </resources>

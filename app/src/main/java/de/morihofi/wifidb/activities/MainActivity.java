@@ -142,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.men_findpositionbynetwork:
                 startActivity(new Intent(this, NetworkPositionFinderActivity.class));
                 return true;
+            case R.id.men_reloadmasterserver:
+                InitializeServerVariables();
+                return true;
             default:
                 return true;
 
