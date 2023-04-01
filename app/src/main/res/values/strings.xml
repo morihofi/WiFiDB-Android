@@ -35,9 +35,9 @@
 
 
     <string name="msg_insufficientpermissions_title">Insufficient Permissions</string>
-    <string name="msg_insufficientpermissions_text">This application requires the permissions to work properly</string>
+    <string name="msg_insufficientpermissions_text">This application requires the permissions to work properly. (If you have accepted all permisson requests, please restart this app)</string>
     <string name="notif_connectedtoserver">Connected to Server</string>
-    <string name="msg_uploadrecords_text">Please wait until all records are uploaded</string>
+    <string name="msg_uploadrecords_text">Please wait until all records are uploaded. This can take a moment ...</string>
     <string name="msg_uploadrecords_title">Uploading records</string>
     <string name="msg_uploadsuccess_title">Upload successful</string>
     <string name="msg_uploadsuccess_text">Thank you for submitting your WiFi records!</string>
@@ -81,7 +81,7 @@
     <string name="msg_initializing_title">Initializing</string>
     <string name="msg_initializing_text">Please wait while we establish a connection to our server. This can take a moment</string>
     <string name="msg_noonlinerecording_title">No Online Mode possible</string>
-    <string name="msg_noonlinerecording_text">Online mode is not supported in this version of Android. Android 5 and higher are supported. Please use offline mode (changeable in the Settings of this App).</string>
+    <string name="msg_noonlinerecording_text">Online mode is not supported in this version of Android. This feature works only in Android 5 higher. Please use offline mode (changeable in the Settings of this App).</string>
     <string name="box_hdr_wifinetworks">WiFi Networks</string>
     <string name="box_hdr_gpsaccuracy">GPS Accuracy</string>
     <string name="box_hdr_rescaninterval">Rescan Interval</string>
@@ -91,8 +91,8 @@
     <string name="useonlinetiles_title">Enable Online Map Tiles</string>
     <string name="useonlinetiles_desc">Enables the map function on the main screen of this app. A restart of this app may be required.</string>
     <string name="msg_updateofflinerecs_title">Please wait...</string>
-    <string name="msg_updateofflinerecs_text">Counting offline datasets. This may take a moment</string>
-    <string name="btn_locatemebynetworks">Locate me using near Networks</string>
+    <string name="msg_updateofflinerecs_text">Counting offline datasets... This may take a moment</string>
+    <string name="btn_locatemebynetworks">Try locate me using near Networks</string>
     <string name="lbl_latitude_val">Latitude: %s</string>
     <string name="lbl_longitude_val">Longitude: %s</string>
     <string name="lbl_accuracy_val">Accuracy: %s m</string>
@@ -131,11 +131,11 @@
     <string name="sslsetting_text">Change the SSL/TLS settings, if you encounter problems or disable it completely (not recommended). Note: This setting has no effect if you are using Android 4.x. A restart of the app is required to apply the settings.</string>
     <string name="autostart_title">Start Service on Boot (Autostart)</string>
     <string name="autostart_text">Start the WifiDB collection service automatically when the device boots up.</string>
-    <string name="advancedoptions_header">Advanced</string>
+    <string name="advancedoptions_header">Advanced options</string>
     <string name="settings_encryption_default_ssltls">SSL/TLS (Default)</string>
     <string name="settings_encryption_noverify">SSL/TLS No Verify</string>
-    <string name="settings_encryption_unencrypted">Unencrypted (not recommended)</string>
-    <string name="men_reloadmasterserver">Reload Masterserver settings</string>
+    <string name="settings_encryption_unencrypted">Unencrypted (not recommended, fail-safe option)</string>
+    <string name="men_reloadmasterserver">Reload Masterserver variables</string>
 
 
 </resources>

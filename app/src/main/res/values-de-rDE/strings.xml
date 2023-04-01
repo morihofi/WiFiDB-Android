@@ -22,10 +22,10 @@
     <string name="msg_energysafing_title">Energiesparen</string>
     <string name="msg_energysafing_text">Bitte deaktivieren Sie die Optimierung für diese App, um zu vermeiden, dass die App vom System in den Ruhezustand versetzt wird.</string>
     <string name="msg_insufficientpermissions_title">Unzureichende Berechtigungen</string>
-    <string name="msg_insufficientpermissions_text">Diese Anwendung benötigt die Berechtigungen, um ordnungsgemäß zu funktionieren</string>
+    <string name="msg_insufficientpermissions_text">Diese Anwendung benötigt die Berechtigungen, um ordnungsgemäß zu funktionieren. (Falls sie jedoch alle Berechtigungsanfragen zugelassen haben, starten Sie bitte die App erneut.)</string>
     <string name="notif_connectedtoserver">Mit Server verbunden</string>
-    <string name="msg_uploadrecords_text">Bitte warten Sie, bis alle Datensätze hochgeladen wurden</string>
-    <string name="msg_uploadrecords_title">Datensätze hochladen</string>
+    <string name="msg_uploadrecords_text">Bitte warten Sie, bis alle Datensätze hochgeladen wurden. Dies kann je nach Größe einen Moment dauern ...</string>
+    <string name="msg_uploadrecords_title">Datensätze werden hochladen</string>
     <string name="msg_uploadsuccess_title">Hochladen erfolgreich</string>
     <string name="msg_uploadsuccess_text">Vielen Dank, dass sie Ihre Datensätze hochgeladen haben</string>
     <string name="msg_uploadfailed_title">Hochladen fehlgeschlagen</string>
@@ -34,7 +34,7 @@
     <string name="msg_nothingtoupload_text">Bevor Sie Datensätze hochladen können, sammeln Sie bitte zuerst einige WLAN-Netzwerke im Offline-Modus.</string>
     <string name="num_offline_records">%o Offline Datensätze</string>
     <string name="status_connected">Verbunden</string>
-    <string name="status_scanningwifinetworks">Scanen...</string>
+    <string name="status_scanningwifinetworks">Scannen...</string>
     <string name="status_disconnected">Verbindung getrennt</string>
     <string name="status_offlinewifirecording">Offline aufz.</string>
     <string name="status_scanevery_x_seconds">Neuscan alle %o sek.</string>
@@ -53,9 +53,9 @@
     <string name="status_gps_ok">OK (%o m)</string>
     <string name="app_service_collectionservice">WlanDB WLAN Sammeldienst</string>
     <string name="msg_nomasterserver_title">Kein Server</string>
-    <string name="msg_nomasterserver_text">Kein Server zum übermitteln verfügbar. Bitte starten Sie diese App erneut. Sie wird jetzt beendet.</string>
+    <string name="msg_nomasterserver_text">Kein Server zum Übermitteln verfügbar. Bitte starten Sie diese App erneut. Sie wird jetzt beendet.</string>
     <string name="previousscans">Letzte Scans</string>
-    <string name="msg_apptoold_title">Version zu alt</string>
+    <string name="msg_apptoold_title">App-Version zu alt</string>
     <string name="msg_apptoold_text">Die installierte Version dieser App ist zu alt. Klicken Sie auf OK, um die Einstellungen zu öffnen, und klicken Sie dann auf Nach Updates suchen, um die neueste Version zu installieren.</string>
     <string name="action_previousscans">Letzte Scans</string>
     <string name="action_clearlist">Liste leeren</string>
@@ -68,7 +68,7 @@
     <string name="msg_initializing_title">Initialisiere</string>
     <string name="msg_initializing_text">Bitte warten Sie, während eine Verbindung zu unserem Server hergestellt wird. Dies kann einen Augenblick dauern...</string>
     <string name="msg_noonlinerecording_title">Kein Online Modus möglich</string>
-    <string name="msg_noonlinerecording_text">Der Online-Modus wird in dieser Version von Android nicht unterstützt. Android 5 und höher werden unterstützt. Bitte verwenden Sie den Offline-Modus (umstellbar in den Einstellungen dieser App).</string>
+    <string name="msg_noonlinerecording_text">Der Online-Modus wird in dieser Version von Android nicht unterstützt. Dieses Feature funktioniert erst ab Android 5 und höher. Bitte verwenden Sie den Offline-Modus (umstellbar in den Einstellungen dieser App).</string>
     <string name="box_hdr_wifinetworks">WLAN Netze</string>
     <string name="box_hdr_gpsaccuracy">GPS Genauigkeit</string>
     <string name="box_hdr_rescaninterval">Neuscan Interval</string>
@@ -77,8 +77,8 @@
     <string name="useonlinetiles_title">Online-Kartenkacheln aktivieren</string>
     <string name="useonlinetiles_desc">Aktiviert die Kartenfunktion auf dem Hauptbildschirm dieser App. Möglicherweise ist ein Neustart dieser App erforderlich.</string>
     <string name="msg_updateofflinerecs_title">Einen Moment bitte...</string>
-    <string name="msg_updateofflinerecs_text">Offline Datensätze werden gezählt. Das kann einen Moment dauern</string>
-    <string name="btn_locatemebynetworks">Suche Position über Netzwerke in der Nähe</string>
+    <string name="msg_updateofflinerecs_text">Offline Datensätze werden gezählt... Das kann einen Moment dauern</string>
+    <string name="btn_locatemebynetworks">Versuche, Position über Netzwerke in der Nähe zu finden</string>
     <string name="lbl_latitude_val">Breitengrad: %s</string>
     <string name="lbl_longitude_val">Längengrad: %s</string>
     <string name="lbl_accuracy_val">Genauigkeit: %s m</string>
@@ -102,9 +102,9 @@
     <string name="msg_update_exception_title">Update fehlgeschlagen</string>
     <string name="msg_update_downloading_title">App-Update</string>
     <string name="msg_update_downloading_text">Update wird heruntergeladen... Bitte schalten Sie Ihr Gerät nicht aus oder wechseln Sie die App</string>
-    <string name="msg_update_exception_text">Beim Herunterladen ist ein Fehler aufgetreren: %s</string>
+    <string name="msg_update_exception_text">Beim Herunterladen ist ein Fehler aufgetreten: %s</string>
     <string name="msg_update_install_title">Update wird installiert</string>
-    <string name="msg_update_install_text">Bitte warten Sie einen Moment, wärend das Update installiert wird.</string>
+    <string name="msg_update_install_text">Bitte warten Sie einen Moment, während das Update installiert wird.</string>
     <string name="msg_update_uptodate_title">App ist aktuell</string>
     <string name="msg_update_uptodate_text">Sie haben die neuste Version bereits installiert.</string>
     <string name="appearance_header">Erscheinungsbild</string>
@@ -112,15 +112,15 @@
     <string name="msg_searchposition_nothingfound_title">Position konnte nicht ermittelt werden</string>
     <string name="btn_letsgo">Auf geht\'s</string>
     <string name="preferredtheme_text">Bevorzugtes Thema</string>
-    <string name="preferredtheme_title">Sie können das Farbthema dieser App ändern. Die Änderungen werden nach dem Neustart der App übernommen.</string>
+    <string name="preferredtheme_title">Sie können das Farbschema dieser App ändern. Die Änderungen werden nach dem Neustart der App übernommen.</string>
     <string name="sslsetting_title">SSL/TLS Verbindung</string>
     <string name="sslsetting_text">Ändern Sie die SSL/TLS-Einstellungen, wenn Sie auf Probleme stoßen, oder deaktivieren Sie sie vollständig (nicht empfohlen). Hinweis: Diese Einstellung hat keine Auswirkung, wenn Sie Android 4.x verwenden. Die Änderungen werden nach einem Neustart der App übernommen.</string>
     <string name="autostart_title">Beim Systemstart den Dienst starten (Autostart)</string>
     <string name="autostart_text">Startet den WlanDB Sammeldienst automatisch wenn das Gerät gestartet wurde</string>
-    <string name="advancedoptions_header">Erweitert</string>
+    <string name="advancedoptions_header">Erweiterte Optionen</string>
     <string name="settings_encryption_default_ssltls">SSL/TLS (Standard)</string>
     <string name="settings_encryption_noverify">SSL/TLS Ohne Gültigkeitsüberprüfung</string>
-    <string name="settings_encryption_unencrypted">Unverschlüsselt (nicht empfohlen)</string>
+    <string name="settings_encryption_unencrypted">Unverschlüsselt (nicht empfohlen, fail-safe option)</string>
     <string name="status_na" translatable="false">n.v.</string>
-    <string name="men_reloadmasterserver">Masterserver Einst. auffrischen</string>
+    <string name="men_reloadmasterserver">Masterserver Variablen aktualisieren</string>
 </resources>
