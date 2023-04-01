@@ -160,6 +160,10 @@ public class WiFiCollectorService extends Service implements LocationListener {
 
                     startForeground(1, getNotification("Connection closed. Exit code: " + code + "; Reason: " + reason,getApplicationContext()));
 
+                    if(stopflag){
+                        startForeground(1, getNotification("Stopping service...",getApplicationContext()));
+                        stopSelf();
+                    }
 
                 }
 
