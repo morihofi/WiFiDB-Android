@@ -136,6 +136,7 @@
     <string name="settings_encryption_noverify">SSL/TLS No Verify</string>
     <string name="settings_encryption_unencrypted">Unencrypted (not recommended, fail-safe option)</string>
     <string name="men_reloadmasterserver">Reload Masterserver variables</string>
+    <string name="men_advanced">Advanced</string>
 
 
 </resources>

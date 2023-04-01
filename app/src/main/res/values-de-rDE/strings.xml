@@ -123,4 +123,5 @@
     <string name="settings_encryption_unencrypted">Unverschlüsselt (nicht empfohlen, fail-safe option)</string>
     <string name="status_na" translatable="false">n.v.</string>
     <string name="men_reloadmasterserver">Masterserver Variablen aktualisieren</string>
+    <string name="men_advanced">Erweitert</string>
 </resources>
