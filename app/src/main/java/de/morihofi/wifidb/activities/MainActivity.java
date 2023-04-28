@@ -49,11 +49,17 @@ import org.osmdroid.views.overlay.Marker;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import de.morihofi.wifidb.Config;
@@ -423,10 +429,16 @@ public class MainActivity extends AppCompatActivity {
 
                                 maposm.getOverlays().clear();
 
-                                Marker startMarker = new Marker(maposm);
-                                startMarker.setPosition(startPoint);
-                                startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-                                maposm.getOverlays().add(startMarker);
+
+                                try {
+                                    //Use try, sometimes here is a nullpointer exception
+                                    Marker startMarker = new Marker(maposm);
+                                    startMarker.setPosition(startPoint);
+                                    startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                                    maposm.getOverlays().add(startMarker);
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
                             }
 
                         }
@@ -478,7 +490,7 @@ public class MainActivity extends AppCompatActivity {
                 btnstart.setEnabled(false);
                 btnstop.setEnabled(true);
 
-                startWifiCollectingService(v.getContext(),preferences);
+                startWifiCollectingService(v.getContext(), preferences);
 
                 // \n is for new line
                 //  Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
@@ -528,14 +540,14 @@ public class MainActivity extends AppCompatActivity {
                 progdlg_upload = new ProgressDialog(MainActivity.this);
                 progdlg_upload.setMessage(getApplicationContext().getResources().getString(R.string.msg_uploadrecords_text)); // Setting Message
                 progdlg_upload.setTitle(R.string.msg_uploadrecords_title); // Setting Title
-                progdlg_upload.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style
+                //progdlg_upload.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style
+                progdlg_upload.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 progdlg_upload.setMax(100);
                 progdlg_upload.show(); // Display Progress Dialog
                 progdlg_upload.setCancelable(false);
                 btnuploadofflinerecs.setEnabled(false);
                 new Thread(() -> {
                     try {
-                        // JSONArray recordsarr = libfile.getWifiRecords(getApplicationContext());
 
                         Thread t = new Thread() {
                             @Override
@@ -596,8 +608,8 @@ public class MainActivity extends AppCompatActivity {
 
                                     File path = getApplicationContext().getFilesDir();
                                     File recordsFile = new File(path, "records.jsonl");
-                                    try {
-
+                                    try (InputStream inputStream = new FileInputStream(recordsFile)) {
+/*
                                         RequestBody formBody = new MultipartBody.Builder()
                                                 .setType(MultipartBody.FORM)
                                                 .addFormDataPart("file", recordsFile.getName(),
@@ -623,6 +635,80 @@ public class MainActivity extends AppCompatActivity {
                                             libfile.addScanID(getApplicationContext(), scanId);
                                             runOnUiThread(() -> {
                                                 showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_text) + "\n\nScanID: " + scanId, getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_title));
+                                            });
+                                        }
+
+
+ */
+
+
+                                        final int BUFFER_SIZE = 4096;
+                                        final String LINE_FEED = "\r\n";
+                                        final String BOUNDARY = UUID.randomUUID().toString();
+
+                                        int bytesRead = 0;
+                                        long totalBytesRead = 0;
+                                        long fileSize = recordsFile.length();
+                                        byte[] buffer = new byte[BUFFER_SIZE];
+
+
+                                        URL uploadUrl = new URL(WiFiCollectorService.masterserver_restJSONL);
+                                        HttpURLConnection connection = (HttpURLConnection) uploadUrl.openConnection();
+                                        connection.setUseCaches(false);
+                                        connection.setDoOutput(true);
+                                        connection.setRequestMethod("POST");
+                                        connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
+                                        connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+                                        connection.setChunkedStreamingMode(BUFFER_SIZE);
+
+
+
+                                        try (OutputStream outputStream = connection.getOutputStream()) {
+                                            String fieldName = "file";
+                                            String fileName = recordsFile.getName();
+                                            String mimeType = "text/plain";
+                                            outputStream.write(("--" + BOUNDARY + LINE_FEED).getBytes("UTF-8"));
+                                            outputStream.write(("Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + fileName + "\"" + LINE_FEED).getBytes("UTF-8"));
+                                            outputStream.write(("Content-Type: " + mimeType + LINE_FEED).getBytes("UTF-8"));
+                                            outputStream.write((LINE_FEED).getBytes("UTF-8"));
+                                            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                                outputStream.write(buffer, 0, bytesRead);
+                                                totalBytesRead += bytesRead;
+                                                int percentCompleted = (int) (totalBytesRead * 100 / fileSize);
+                                                runOnUiThread(() -> progdlg_upload.setProgress(percentCompleted));
+                                            }
+                                            outputStream.write((LINE_FEED + "--" + BOUNDARY + "--" + LINE_FEED).getBytes("UTF-8"));
+                                        }
+
+
+                                        int responseCode = connection.getResponseCode();
+                                        if (responseCode == HttpURLConnection.HTTP_OK) {
+
+                                            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                                            String strCurrentLine;
+                                            StringBuilder builder = new StringBuilder();
+                                            while ((strCurrentLine = br.readLine()) != null) {
+                                                builder.append(strCurrentLine + "\n");
+                                            }
+
+                                            // Upload successful
+
+                                            JSONObject responseJson = new JSONObject(builder.toString());
+
+                                            String scanId = responseJson.getString("scanid");
+
+                                            recordsFile.delete();
+                                            libfile.addScanID(getApplicationContext(), scanId);
+                                            runOnUiThread(() -> {
+                                                showAlert(getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_text) + "\n\nScanID: " + scanId, getApplicationContext().getResources().getString(R.string.msg_uploadsuccess_title));
+                                            });
+
+                                        } else {
+                                            // Upload failed
+
+                                            runOnUiThread(() -> {
+                                                progdlg_upload.dismiss();
+                                                showAlert("Upload failed: Response Code " + responseCode, getApplicationContext().getResources().getString(R.string.msg_uploadfailed_title));
                                             });
                                         }
 
@@ -661,7 +747,7 @@ public class MainActivity extends AppCompatActivity {
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.e("UploadScans",e.getMessage());
+                        Log.e("UploadScans", e.getMessage());
                     }
                 }).start();
             }
@@ -669,7 +755,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static void startWifiCollectingService(Context context,SharedPreferences prefs) {
+    public static void startWifiCollectingService(Context context, SharedPreferences prefs) {
         Intent serviceIntent = new Intent(context, WiFiCollectorService.class);
         serviceIntent.putExtra("action", "start");
         serviceIntent.putExtra("offlinemode", prefs.getBoolean("offline_mode", true));
