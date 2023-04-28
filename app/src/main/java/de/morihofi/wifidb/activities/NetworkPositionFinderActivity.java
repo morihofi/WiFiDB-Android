@@ -214,7 +214,7 @@ public class NetworkPositionFinderActivity extends AppCompatActivity {
                     }
 
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
