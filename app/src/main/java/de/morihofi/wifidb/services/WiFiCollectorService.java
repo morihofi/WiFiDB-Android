@@ -350,6 +350,9 @@ public class WiFiCollectorService extends Service implements LocationListener {
         return null;
     }
 
+
+
+
     @Override
     public void onLocationChanged(Location location) {
         //txtLat = (TextView) findViewById(R.id.textview1);
@@ -363,6 +366,11 @@ public class WiFiCollectorService extends Service implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
         Log.d("Latitude","disable");
+
+        //GPS is probably lost, so clear variables
+        loc_lat = 0d;
+        loc_lon = 0d;
+        loc_radius = 0;
     }
 
     @Override
@@ -398,35 +406,33 @@ public class WiFiCollectorService extends Service implements LocationListener {
 
                     jobj.put("contributor", contributor);
 
-                    JSONArray arrnetworks = new JSONArray();
+                    JSONArray arrNetworks = new JSONArray();
 
 
                     for (ScanResult res : mScanResults) {
                         System.out.println(res);
-                        JSONObject netobj = new JSONObject();
+                        JSONObject netObj = new JSONObject();
 
 
-                        netobj.put("bssid", res.BSSID);
-                        netobj.put("essid", res.SSID);
-                        netobj.put("signalstrenght", res.level);
-                        netobj.put("frequency", res.frequency);
-                        netobj.put("capabilities", res.capabilities);
+                        netObj.put("bssid", res.BSSID);
+                        netObj.put("essid", res.SSID);
+                        netObj.put("signalstrenght", res.level);
+                        netObj.put("frequency", res.frequency);
+                        netObj.put("capabilities", res.capabilities);
 
-                        arrnetworks.put(netobj);
+                        arrNetworks.put(netObj);
 
                     }
 
-                    jobj.put("networks", arrnetworks);
-
-
+                    jobj.put("networks", arrNetworks);
 
                     if(loc_lat == 0 || loc_lon == 0){
                         //No Position found
                     }else{
                         if(wsclient.isOpen()){
                             wsclient.send(jobj.toString());
-                        }
-                        if(offlinemode){
+                        }else if(!wsclient.isOpen() || offlinemode){
+                            //Append to offline records, even if there is currently no connection
                             libfile.appendWifiRecord(getApplicationContext(), jobj);
                         }
                     }
