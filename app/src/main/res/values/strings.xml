@@ -143,6 +143,8 @@
     <string name="deny">Deny</string>
     <string name="dlman_update_title">WiFiDB Update</string>
     <string name="dlman_update_text">Downloading WiFiDB App-Update...</string>
+    <string name="msg_updatedlfailed_title">Download failed</string>
+    <string name="msg_updatedlfailed_text">Update download was not successfull. Please try again later</string>
 
 
 </resources>

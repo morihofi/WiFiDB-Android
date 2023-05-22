@@ -130,4 +130,6 @@
     <string name="deny">Verweigern</string>
     <string name="dlman_update_title">WlanDB Update</string>
     <string name="dlman_update_text">WlanDB App-Update wird heruntergeladen...</string>
+    <string name="msg_updatedlfailed_title">Herunterladen fehlgeschlagen</string>
+    <string name="msg_updatedlfailed_text">Der Download konnte nicht erfolgreich abgeschlossen werden. Bitte versuche es später erneut.</string>
 </resources>

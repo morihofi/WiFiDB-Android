@@ -1,8 +1,5 @@
 package de.morihofi.wifidb.activities;
 
-import static android.os.Environment.getExternalStorageDirectory;
-
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -10,44 +7,29 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.StrictMode;
-import android.provider.Settings;
 import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.FragmentManager;
 import androidx.preference.EditTextPreference;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.morihofi.wifidb.BuildConfig;
 import de.morihofi.wifidb.Config;
@@ -55,10 +37,6 @@ import de.morihofi.wifidb.R;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnNeverAskAgain;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.RuntimePermissions;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -123,6 +101,8 @@ public class SettingsActivity extends AppCompatActivity {
             doBefore.run();
         }
 
+        AtomicBoolean updateSearchCanceled = new AtomicBoolean(false);
+
         ProgressDialog progressDialog = new ProgressDialog(context);
         OkHttpClient client = new OkHttpClient();
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL); // Progress Dialog Style
@@ -134,9 +114,12 @@ public class SettingsActivity extends AppCompatActivity {
         updateSearchProgressDialog.setTitle(R.string.msg_searchforupdates_title); // Setting Title
         updateSearchProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style
         updateSearchProgressDialog.setMax(100);
-        updateSearchProgressDialog.setCancelable(false);
+        updateSearchProgressDialog.setCancelable(true);
+        updateSearchProgressDialog.setOnCancelListener(dialogInterface -> {
+            dialogInterface.dismiss();
+            updateSearchCanceled.set(true);
+        });
         updateSearchProgressDialog.show();
-
 
         Thread updaterThread = new Thread() {
             @Override
@@ -148,6 +131,10 @@ public class SettingsActivity extends AppCompatActivity {
 
                 try (Response response = client.newCall(request).execute()) {
                     JSONObject o = new JSONObject(response.body().string());
+
+                    if(updateSearchCanceled.get()){
+                        return;
+                    }
 
                     runOnUiThread(updateSearchProgressDialog::dismiss);
 
@@ -185,6 +172,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                             // Download abgeschlossen abwarten
                             boolean downloading = true;
+                            boolean failed = false;
                             while (downloading) {
                                 DownloadManager.Query query = new DownloadManager.Query();
                                 query.setFilterById(downloadId);
@@ -196,6 +184,10 @@ public class SettingsActivity extends AppCompatActivity {
                                     if (status == DownloadManager.STATUS_SUCCESSFUL) {
                                         downloading = false;
                                     }
+                                    if (status == DownloadManager.STATUS_FAILED) {
+                                        downloading = false;
+                                        failed = true;
+                                    }
 
                                     int totalBytesColumnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
                                     int downloadedBytesColumnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
@@ -206,14 +198,28 @@ public class SettingsActivity extends AppCompatActivity {
                                     progressDialog.setMax(totalBytes);
                                     progressDialog.setProgress(downloadedBytes);
 
+
+
                                 }
                                 cursor.close();
                             }
 
-                            // APK-Datei installieren
-                            String apkFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + apkPath;
-                            installAPK(apkFilePath, context);
+                            if(!failed){
+                                // APK-Datei installieren
+                                String apkFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + apkPath;
+                                installAPK(apkFilePath, context);
 
+                            }else{
+                                AlertDialog alert = new AlertDialog.Builder(SettingsActivity.this)
+                                        .setTitle(getString(R.string.msg_updatedlfailed_title))
+                                        .setMessage(getString(R.string.msg_updatedlfailed_text))
+                                        .setNeutralButton("OK", (dialogInterface, i) -> {
+                                            dialogInterface.dismiss();
+                                        })
+                                        .create();
+                                alert.show();
+
+                            }
 
                         } else {
                             runOnUiThread(() -> {
