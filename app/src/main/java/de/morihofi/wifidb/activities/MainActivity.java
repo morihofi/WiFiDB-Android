@@ -1,7 +1,6 @@
 package de.morihofi.wifidb.activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -54,11 +53,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -68,13 +64,15 @@ import de.morihofi.wifidb.utils.Tools;
 import de.morihofi.wifidb.utils.libfile;
 import de.morihofi.wifidb.utils.libgeo;
 import de.morihofi.wifidb.services.WiFiCollectorService;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
+@RuntimePermissions
 public class MainActivity extends AppCompatActivity {
 
     private TextView lblofflinerecords;
@@ -94,36 +92,37 @@ public class MainActivity extends AppCompatActivity {
     TextView lbl_status_status = null;
     MapView maposm = null;
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {// If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
 
-                // permission was granted, yay! Do the
-                // contacts-related task you need to do.
-            } else {
-
-
-                //set positive button
-                AlertDialog alertDialog = new AlertDialog.Builder(this)
-                        .setIcon(android.R.drawable.ic_dialog_alert) //set icon
-                        .setTitle(R.string.msg_insufficientpermissions_title) //set title
-                        .setMessage(R.string.msg_insufficientpermissions_text) //set message
-                        .setPositiveButton(R.string.btn_close, (dialogInterface, i) -> {
-                            //set what would happen when positive button is clicked
-                            finish();
-                        })
-                        .show();
-
-            }
-            return;
-
-
-        }
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
+
+    /**
+     * Dialog for handling permissions
+     *
+     * @param request
+     */
+    private void showRationaleDialog(PermissionRequest request) {
+
+
+        new AlertDialog.Builder(this)
+                .setPositiveButton(R.string.allow, (dialogInterface, i) -> request.proceed())
+                .setNegativeButton(R.string.deny, (dialogInterface, i) -> request.cancel())
+                .setCancelable(false)
+                .setMessage(R.string.msg_notallpermissionsallowed_text)
+                .setTitle(R.string.msg_notallpermissionsallowed_title)
+                .show();
+    }
+
+    @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION})
+    void showRationaleForPermission(PermissionRequest request) {
+        showRationaleDialog(request);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -158,8 +157,56 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @OnPermissionDenied({Manifest.permission.ACCESS_FINE_LOCATION})
+    @OnNeverAskAgain({Manifest.permission.ACCESS_FINE_LOCATION})
+    public void permissionDenied() {
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert) //set icon
+                .setTitle(R.string.msg_insufficientpermissions_title) //set title
+                .setMessage(R.string.msg_insufficientpermissions_text) //set message
+                .setPositiveButton(R.string.btn_close, (dialogInterface, i) -> {
+                    //set what would happen when positive button is clicked
+                    finish();
+                }).create();
+        alertDialog.show();
+    }
 
-    @SuppressLint("MissingPermission")
+    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION})
+    void runCollectionService() {
+        // TODO Auto-generated method stub
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            if (!preferences.getBoolean("offline_mode", true)) {
+                showAlert(getApplicationContext().getResources().getString(R.string.msg_noonlinerecording_text), getApplicationContext().getResources().getString(R.string.msg_noonlinerecording_title));
+                return;
+            }
+        }
+
+        btnstart.setEnabled(false);
+        btnstop.setEnabled(true);
+
+        startWifiCollectingService(this, preferences);
+
+        // \n is for new line
+        //  Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+
+    }
+
+    void stopCollectionService() {
+
+        btnstart.setEnabled(true);
+        btnstop.setEnabled(false);
+
+
+        Intent serviceIntent = new Intent(this, WiFiCollectorService.class);
+        serviceIntent.putExtra("action", "stop");
+        startService(serviceIntent);
+
+
+        // Intent serviceIntent = new Intent(v.getContext(), WiFiCollectorService.class);
+
+        // stopService(serviceIntent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -222,18 +269,17 @@ public class MainActivity extends AppCompatActivity {
 
 
             if (pm.isIgnoringBatteryOptimizations(packageName)) {
-                System.out.println("App ignores Battery optimizations");
+                Log.i("Battery", "App ignores Battery optimizations");
                 //   intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
 
 
             } else {
-                System.out.println("App does not ignore Battery optimizations");
+                Log.i("Battery", "App does not ignore Battery optimizations");
                 //   intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                 //   intent.setData(Uri.parse("package:" + packageName));
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder
-                        .setMessage(R.string.msg_energysafing_text)
+                builder.setMessage(R.string.msg_energysafing_text)
                         .setTitle(R.string.msg_energysafing_title)
                         .setPositiveButton(R.string.btn_opensettings, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -257,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             //check if wifi scan throttle is enabled
-            Boolean isthrottleenabled = false;
+            boolean isthrottleenabled = false;
             try {
                 if (Settings.Global.getInt(this.getContentResolver(), "wifi_scan_throttle_enabled") == 1) {
                     //check if wifi scan throttle is enabled
@@ -306,7 +352,6 @@ public class MainActivity extends AppCompatActivity {
         btnstart = (Button) findViewById(R.id.btnstart);
         btnstop = (Button) findViewById(R.id.btnstop);
         btnkill = (Button) findViewById(R.id.btnkill);
-        //webview = (WebView)  findViewById(R.id.webView);
         btnuploadofflinerecs = (Button) findViewById(R.id.btnuploadofflinerecs);
 
         lbl_status_wifinetworks = (TextView) findViewById(R.id.lbl_status_wifinetworks);
@@ -479,41 +524,14 @@ public class MainActivity extends AppCompatActivity {
 
         btnstart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    if (!preferences.getBoolean("offline_mode", true)) {
-                        showAlert(getApplicationContext().getResources().getString(R.string.msg_noonlinerecording_text), getApplicationContext().getResources().getString(R.string.msg_noonlinerecording_title));
-                        return;
-                    }
-                }
-
-                btnstart.setEnabled(false);
-                btnstop.setEnabled(true);
-
-                startWifiCollectingService(v.getContext(), preferences);
-
-                // \n is for new line
-                //  Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-
+                MainActivityPermissionsDispatcher.runCollectionServiceWithPermissionCheck(MainActivity.this);
             }
         });
 
 
         btnstop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                btnstart.setEnabled(true);
-                btnstop.setEnabled(false);
-
-
-                Intent serviceIntent = new Intent(v.getContext(), WiFiCollectorService.class);
-                serviceIntent.putExtra("action", "stop");
-                startService(serviceIntent);
-
-                // Intent serviceIntent = new Intent(v.getContext(), WiFiCollectorService.class);
-
-                // stopService(serviceIntent);
-
+                stopCollectionService();
             }
         });
 
@@ -660,7 +678,6 @@ public class MainActivity extends AppCompatActivity {
                                         connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
                                         connection.setRequestProperty("User-Agent", "Mozilla/5.0");
                                         connection.setChunkedStreamingMode(BUFFER_SIZE);
-
 
 
                                         try (OutputStream outputStream = connection.getOutputStream()) {

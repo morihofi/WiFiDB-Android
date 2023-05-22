@@ -4,6 +4,7 @@ import static android.os.Environment.getExternalStorageDirectory;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -38,9 +39,11 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
@@ -52,12 +55,15 @@ import de.morihofi.wifidb.R;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.RuntimePermissions;
 
 public class SettingsActivity extends AppCompatActivity {
 
     TextView lblVersion = null;
     Button btnSearchForUpdates = null;
-
 
 
 
@@ -69,11 +75,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         Bundle b = getIntent().getExtras();
         boolean forceUpdate = false; // or other values
-        if(b != null) {
+        if (b != null) {
             forceUpdate = b.getBoolean("forceupdate");
         }
 
-        if(!forceUpdate){
+        if (!forceUpdate) {
             //Normal open
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
@@ -91,25 +97,32 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
 
-
-
-
-
-
         lblVersion = (TextView) findViewById(R.id.lblVersion);
         btnSearchForUpdates = (Button) findViewById(R.id.btnSearchForUpdates);
 
         lblVersion.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"));
         btnSearchForUpdates.setOnClickListener((e) -> {
-            btnSearchForUpdates.setEnabled(false);
+
+
             checkForUpdates(SettingsActivity.this, () -> {
+                //Run After
                 btnSearchForUpdates.setEnabled(true);
+            }, () -> {
+                //Run Before
+                btnSearchForUpdates.setEnabled(false);
             });
+
         });
 
     }
 
-    public void checkForUpdates(Context context, Runnable doAfter){
+
+    void checkForUpdates(Context context, Runnable doAfter, Runnable doBefore) {
+
+        if(doBefore != null){
+            doBefore.run();
+        }
+
         ProgressDialog progressDialog = new ProgressDialog(context);
         OkHttpClient client = new OkHttpClient();
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL); // Progress Dialog Style
@@ -136,10 +149,7 @@ public class SettingsActivity extends AppCompatActivity {
                 try (Response response = client.newCall(request).execute()) {
                     JSONObject o = new JSONObject(response.body().string());
 
-                    runOnUiThread(() -> {
-                        updateSearchProgressDialog.dismiss();
-
-                    });
+                    runOnUiThread(updateSearchProgressDialog::dismiss);
 
                     if (o.getInt("serverstatus") == 1) {
                         //Server is available
@@ -164,65 +174,48 @@ public class SettingsActivity extends AppCompatActivity {
                                 progressDialog.show(); // Display Progress Dialog
                             });
 
-                            try {
-                                Log.i("Settings", "Downloading Update");
+                            DownloadManager.Request dlRequest = new DownloadManager.Request(Uri.parse(updateUrl));
+                            dlRequest.setTitle(getString(R.string.dlman_update_title));
+                            dlRequest.setDescription(getString(R.string.dlman_update_text));
+                            String apkPath = "wifidb.apk";
+                            dlRequest.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, apkPath);
 
-                                URL url = new URL(updateUrl);
-                                HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
-                                long completeFileSize = httpConnection.getContentLength();
+                            DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                            long downloadId = downloadManager.enqueue(dlRequest);
 
-                                java.io.BufferedInputStream in = new java.io.BufferedInputStream(httpConnection.getInputStream());
-                                java.io.FileOutputStream fos = new java.io.FileOutputStream(filename);
-                                java.io.BufferedOutputStream bout = new BufferedOutputStream(
-                                        fos, 1024);
-                                byte[] data = new byte[1024];
-                                long downloadedFileSize = 0;
-                                int x = 0;
-                                while ((x = in.read(data, 0, 1024)) >= 0) {
-                                    downloadedFileSize += x;
+                            // Download abgeschlossen abwarten
+                            boolean downloading = true;
+                            while (downloading) {
+                                DownloadManager.Query query = new DownloadManager.Query();
+                                query.setFilterById(downloadId);
+                                android.database.Cursor cursor = downloadManager.query(query);
+                                if (cursor.moveToFirst()) {
 
-                                    // calculate progress
-                                    final int currentProgress = (int) ((((double) downloadedFileSize) / ((double) completeFileSize)) * 100000d);
+                                    int statusColumnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                                    int status = cursor.getInt(statusColumnIndex);
+                                    if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                                        downloading = false;
+                                    }
 
-                                    runOnUiThread(() -> {
-                                        progressDialog.setProgress(currentProgress);
-                                    });
+                                    int totalBytesColumnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
+                                    int downloadedBytesColumnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
 
-                                    bout.write(data, 0, x);
+                                    int totalBytes = cursor.getInt(totalBytesColumnIndex);
+                                    int downloadedBytes = cursor.getInt(downloadedBytesColumnIndex);
+
+                                    progressDialog.setMax(totalBytes);
+                                    progressDialog.setProgress(downloadedBytes);
+
                                 }
-                                bout.close();
-                                in.close();
-                            } catch (Exception e) {
-                                Log.e("Settings", "Update exception", e);
-                                runOnUiThread(() -> {
-                                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-                                    alertDialog.setTitle(R.string.msg_update_exception_title);
-                                    alertDialog.setMessage(String.format(context.getString(R.string.msg_update_exception_text), e.getMessage()));
-                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            });
-                                    doAfter.run();
-                                    progressDialog.dismiss();
-                                    alertDialog.show();
-                                });
+                                cursor.close();
                             }
 
+                            // APK-Datei installieren
+                            String apkFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + apkPath;
+                            installAPK(apkFilePath, context);
 
-                            if (Build.VERSION.SDK_INT >= 24) {
-                                installAPK(filename,context);
-                            } else {
-                                // Android 4 to Android 7
 
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setDataAndType(Uri.fromFile(new File(filename)), "application/vnd.android.package-archive");
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // without this flag android returned a intent error!
-                                context.startActivity(intent);
-                            }
-
-                        }else{
+                        } else {
                             runOnUiThread(() -> {
                                 AlertDialog alertDialog = new AlertDialog.Builder(context).create();
                                 alertDialog.setTitle(R.string.msg_update_uptodate_title);
@@ -278,24 +271,38 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-    private void installAPK(String PATH,Context context) {
+    private void installAPK(String PATH, Context context) {
+
+        if (Build.VERSION.SDK_INT >= 24) {
 
 
-        File file = new File(PATH);
-        if (file.exists()) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(uriFromFile(getApplicationContext(), new File(PATH)), "application/vnd.android.package-archive");
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            try {
-                context.getApplicationContext().startActivity(intent);
-            } catch (ActivityNotFoundException e) {
-                e.printStackTrace();
-                Log.e("TAG", "Error in opening the file!");
+            File file = new File(PATH);
+            if (file.exists()) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(uriFromFile(getApplicationContext(), new File(PATH)), "application/vnd.android.package-archive");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                try {
+                    context.getApplicationContext().startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                    Log.e("TAG", "Error in opening the file!");
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), "installing", Toast.LENGTH_LONG).show();
             }
+
+
         } else {
-            Toast.makeText(getApplicationContext(), "installing", Toast.LENGTH_LONG).show();
+            // Android 4 to Android 7
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(new File(PATH)), "application/vnd.android.package-archive");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // without this flag android returned a intent error!
+            context.startActivity(intent);
         }
+
+
     }
 
     private Uri uriFromFile(Context context, File file) {

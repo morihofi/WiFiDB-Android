@@ -35,7 +35,7 @@
 
 
     <string name="msg_insufficientpermissions_title">Insufficient Permissions</string>
-    <string name="msg_insufficientpermissions_text">This application requires the permissions to work properly. (If you have accepted all permisson requests, please restart this app)</string>
+    <string name="msg_insufficientpermissions_text">This application requires the permissions to work properly. Please allow all required permissions and start this app again. This App is now closing.</string>
     <string name="notif_connectedtoserver">Connected to Server</string>
     <string name="msg_uploadrecords_text">Please wait until all records are uploaded. This can take a moment ...</string>
     <string name="msg_uploadrecords_title">Uploading records</string>
@@ -91,7 +91,7 @@
     <string name="useonlinetiles_title">Enable Online Map Tiles</string>
     <string name="useonlinetiles_desc">Enables the map function on the main screen of this app. A restart of this app may be required.</string>
     <string name="msg_updateofflinerecs_title">Please wait...</string>
-    <string name="msg_updateofflinerecs_text">Counting offline datasets... This may take a moment</string>
+    <string name="msg_updateofflinerecs_text">Counting offline measurements... This may take a moment</string>
     <string name="btn_locatemebynetworks">Try locate me using near Networks</string>
     <string name="lbl_latitude_val">Latitude: %s</string>
     <string name="lbl_longitude_val">Longitude: %s</string>
@@ -137,6 +137,12 @@
     <string name="settings_encryption_unencrypted">Unencrypted (not recommended, fail-safe option)</string>
     <string name="men_reloadmasterserver">Reload Masterserver variables</string>
     <string name="men_advanced">Advanced</string>
+    <string name="msg_notallpermissionsallowed_title">Missing permissions</string>
+    <string name="msg_notallpermissionsallowed_text">Please allow the permissions to get started</string>
+    <string name="allow">Allow</string>
+    <string name="deny">Deny</string>
+    <string name="dlman_update_title">WiFiDB Update</string>
+    <string name="dlman_update_text">Downloading WiFiDB App-Update...</string>
 
 
 </resources>
