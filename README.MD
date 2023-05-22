@@ -23,5 +23,5 @@ Android 4.1 and up
 - 1.16 - 16 (Bug fix release)
 - 1.17 - 17 (Bug fix release)
 - 1.18 - 18 (Improved Translation) 
-- 1.19 - Bug fix release
-- 1.20 - Beta Upload Progress Bar
+- 1.19 - 19 Bug fix release
+- 1.20 - 20 Beta Upload Progress Bar
