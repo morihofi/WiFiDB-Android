@@ -25,3 +25,4 @@ Android 4.1 and up
 - 1.18 - 18 (Improved Translation) 
 - 1.19 - 19 Bug fix release
 - 1.20 - 20 Beta Upload Progress Bar
+- 1.21 - 21 Offline Mode fallback, if server connection is lost; GPS lost detection
